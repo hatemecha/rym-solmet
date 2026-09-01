@@ -2,6 +2,7 @@
 import "../styles/global.css";
 
 import BrandLogo from "../components/BrandLogo.astro";
+import MotionController from "../components/MotionController.astro";
 import { site } from "../data/site";
 
 interface Props {
@@ -46,32 +47,6 @@ const year = new Date().getFullYear();
         </div>
       </div>
     </footer>
-    <script is:inline>
-      (() => {
-        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-        const items = [...document.querySelectorAll("[data-reveal]")];
-
-        if (!items.length || reducedMotion.matches || !("IntersectionObserver" in window)) {
-          return;
-        }
-
-        document.documentElement.classList.add("has-scroll-reveal");
-        const reveal = (entry) => {
-          const element = entry.target;
-          const delay = element.dataset.revealDelay;
-          if (delay) element.style.transitionDelay = `${delay}ms`;
-          element.classList.add("is-revealed");
-        };
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            reveal(entry);
-            observer.unobserve(entry.target);
-          });
-        }, { threshold: 0.12, rootMargin: "0px 0px -7%" });
-
-        items.forEach((item) => observer.observe(item));
-      })();
-    </script>
+    <MotionController />
   </body>
 </html>

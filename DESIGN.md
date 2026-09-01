@@ -8,6 +8,7 @@ colors:
   canvas: "#F2F0EB"
   steel: "#747878"
   steel-light: "#C9CCCA"
+  steel-surface: "#D8D9D4"
   white: "#FFFFFF"
 
 typography:
@@ -106,6 +107,8 @@ La interfaz es esencialmente monocromática.
 - `ink` es el color principal de texto y elementos oscuros.
 - `canvas` es el fondo predominante: cálido, nunca blanco digital puro.
 - `steel` y `steel-light` se usan para metadata, líneas y elementos secundarios.
+- `steel-surface` es una superficie clara de transición para capítulos sin fotografía;
+  evita que el recorrido dependa sólo de canvas e ink.
 - `white` se reserva para contraste puntual.
 
 Las fotografías aportan el color.
@@ -185,11 +188,12 @@ composición general del sitio.
 Evitar grids de cards repetitivas.
 
 Usar una única fotografía estática en el hero, sin filtros ni rotación. El
-movimiento acompaña el recorrido con revelados breves de bloques editoriales,
-fotografías, captions y líneas; puede escalonar listas cortas. Nunca debe
-impedir la navegación ni aplicarse por igual a toda la página. Flechas y escala
-contenida de fotografías con puntero fino completan los estados interactivos.
-Todo debe respetar la preferencia de movimiento reducido.
+scroll usa Lenis con respuesta natural en dispositivos táctiles y GSAP /
+ScrollTrigger para acompañar el recorrido: máscaras breves en titulares e
+imágenes, captions apenas posteriores, construcción de líneas y parallax muy
+leve en pocas fotografías estructurales. Nunca debe impedir la navegación,
+forzar la inercia en touch ni aplicarse por igual a toda la página. Todo debe
+respetar la preferencia de movimiento reducido.
 
 ## Elevation & Depth
 
@@ -223,6 +227,11 @@ Usarlo con criterio:
 El grain nunca debe leerse como textura de acero digital, papel reciclado
 decorativo ni filtro vintage. Debe sentirse como una superficie mate real,
 casi imperceptible de un vistazo.
+
+El motivo SVG provisto de líneas estructurales puede entrar sólo en superficies
+sin fotografía y en los intersticios amplios del portfolio. Se usa muy ampliado,
+recortado por los bordes y con contraste bajo; se mueve apenas con el scroll.
+No debe leerse como mapa, patrón industrial literal ni textura aplicada.
 
 ## Shapes
 

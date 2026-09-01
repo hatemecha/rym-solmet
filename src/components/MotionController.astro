@@ -1,0 +1,107 @@
+<script>
+  import Lenis from "lenis";
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (!reducedMotion.matches) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    const lenis = new Lenis({
+      duration: coarsePointer ? 0.8 : 1.05,
+      smoothWheel: !coarsePointer,
+      syncTouch: false,
+      touchMultiplier: 1,
+    });
+
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+    document.documentElement.classList.add("has-motion");
+
+    const withTrigger = (target: Element, options: { from: gsap.TweenVars; to: gsap.TweenVars }) => {
+      gsap.fromTo(target, options.from, {
+        ...options.to,
+        scrollTrigger: {
+          trigger: target,
+          start: "top 86%",
+          end: "top 52%",
+          scrub: 0.55,
+        },
+      });
+    };
+
+    document.querySelectorAll('[data-reveal="heading"]').forEach((heading) => {
+      const title = heading.querySelector("h2");
+      const supporting = heading.querySelector("p");
+      if (title) withTrigger(title, {
+        from: { clipPath: "inset(0 0 100% 0)", y: 20 },
+        to: { clipPath: "inset(0)", y: 0, ease: "none" },
+      });
+      if (supporting) withTrigger(supporting, {
+        from: { autoAlpha: 0, y: 12 },
+        to: { autoAlpha: 1, y: 0, ease: "none" },
+      });
+      gsap.fromTo(heading, { "--line-scale": 0 }, {
+        "--line-scale": 1,
+        ease: "none",
+        scrollTrigger: { trigger: heading, start: "top 84%", end: "top 58%", scrub: 0.45 },
+      });
+    });
+
+    document.querySelectorAll('[data-reveal="image"]').forEach((media) => {
+      withTrigger(media, {
+        from: { clipPath: "inset(0 0 12% 0)", y: 28 },
+        to: { clipPath: "inset(0)", y: 0, ease: "none" },
+      });
+      const caption = media.parentElement?.querySelector('[data-reveal="caption"]');
+      if (caption) withTrigger(caption, {
+        from: { autoAlpha: 0, y: 12 },
+        to: { autoAlpha: 1, y: 0, ease: "none" },
+      });
+    });
+
+    const hero = document.querySelector(".hero");
+    const heroImage = document.querySelector(".hero__image");
+    if (hero && heroImage) {
+      gsap.to(heroImage, {
+        yPercent: 7,
+        scale: 1.045,
+        ease: "none",
+        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.6 },
+      });
+    }
+
+    document.querySelectorAll(".project--3 .project__media img, .project--5 .project__media img").forEach((image) => {
+      gsap.to(image, {
+        yPercent: -5,
+        scale: 1.035,
+        ease: "none",
+        scrollTrigger: { trigger: image.closest(".project"), start: "top bottom", end: "bottom top", scrub: 0.75 },
+      });
+    });
+
+    const list = document.querySelector(".capabilities__list");
+    if (list) {
+      gsap.fromTo(list.querySelectorAll("li"), { x: -18, autoAlpha: 0 }, {
+        x: 0,
+        autoAlpha: 1,
+        stagger: 0.09,
+        ease: "none",
+        scrollTrigger: { trigger: list, start: "top 84%", end: "top 42%", scrub: 0.5 },
+      });
+    }
+
+    document.querySelectorAll("[data-motif]").forEach((motif) => {
+      gsap.to(motif, {
+        backgroundPositionY: "3rem",
+        ease: "none",
+        scrollTrigger: { trigger: motif.parentElement, start: "top bottom", end: "bottom top", scrub: 1.2 },
+      });
+    });
+
+    ScrollTrigger.refresh();
+  }
+</script>
