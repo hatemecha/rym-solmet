@@ -36,14 +36,18 @@
     document.querySelectorAll('[data-reveal="heading"]').forEach((heading) => {
       const title = heading.querySelector("h2");
       const supporting = heading.querySelector("p");
-      if (title) withTrigger(title, {
-        from: { clipPath: "inset(0 0 100% 0)", y: 20 },
-        to: { clipPath: "inset(0)", y: 0, ease: "none" },
-      });
-      if (supporting) withTrigger(supporting, {
-        from: { autoAlpha: 0, y: 12 },
-        to: { autoAlpha: 1, y: 0, ease: "none" },
-      });
+      if (title) {
+        withTrigger(title, {
+          from: { clipPath: "inset(0 0 100% 0)", y: 20 },
+          to: { clipPath: "inset(0)", y: 0, ease: "none" },
+        });
+      }
+      if (supporting) {
+        withTrigger(supporting, {
+          from: { autoAlpha: 0, y: 12 },
+          to: { autoAlpha: 1, y: 0, ease: "none" },
+        });
+      }
       gsap.fromTo(heading, { "--line-scale": 0 }, {
         "--line-scale": 1,
         ease: "none",
@@ -57,27 +61,33 @@
         to: { clipPath: "inset(0)", y: 0, ease: "none" },
       });
       const caption = media.parentElement?.querySelector('[data-reveal="caption"]');
-      if (caption) withTrigger(caption, {
-        from: { autoAlpha: 0, y: 12 },
-        to: { autoAlpha: 1, y: 0, ease: "none" },
-      });
+      if (caption) {
+        withTrigger(caption, {
+          from: { autoAlpha: 0, y: 12 },
+          to: { autoAlpha: 1, y: 0, ease: "none" },
+        });
+      }
     });
 
     const hero = document.querySelector(".hero");
     const heroImage = document.querySelector(".hero__image");
+
     if (hero && heroImage) {
       gsap.to(heroImage, {
-        yPercent: 7,
-        scale: 1.045,
+        yPercent: coarsePointer ? 2 : 5,
+        scale: coarsePointer ? 1.02 : 1.035,
         ease: "none",
-        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.6 },
+        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.65 },
       });
     }
 
     document.querySelectorAll(".project--3 .project__media img, .project--5 .project__media img").forEach((image) => {
+      if (coarsePointer) {
+        return;
+      }
       gsap.to(image, {
-        yPercent: -5,
-        scale: 1.035,
+        yPercent: -4,
+        scale: 1.025,
         ease: "none",
         scrollTrigger: { trigger: image.closest(".project"), start: "top bottom", end: "bottom top", scrub: 0.75 },
       });
@@ -94,11 +104,15 @@
       });
     }
 
-    document.querySelectorAll("[data-motif]").forEach((motif) => {
-      gsap.to(motif, {
-        backgroundPositionY: "3rem",
+    document.querySelectorAll("[data-warped-grid]").forEach((grid) => {
+      const parent = grid.parentElement;
+      if (!parent) {
+        return;
+      }
+      gsap.to(grid, {
+        yPercent: coarsePointer ? 0.5 : 2.5,
         ease: "none",
-        scrollTrigger: { trigger: motif.parentElement, start: "top bottom", end: "bottom top", scrub: 1.2 },
+        scrollTrigger: { trigger: parent, start: "top bottom", end: "bottom top", scrub: 1.1 },
       });
     });
 

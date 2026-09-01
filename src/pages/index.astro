@@ -5,7 +5,7 @@ import ContactSection from "../components/ContactSection.astro";
 import HeroImage from "../components/HeroImage.astro";
 import ProjectGallery from "../components/ProjectGallery.astro";
 import SiteHeader from "../components/SiteHeader.astro";
-import StructureMotif from "../components/StructureMotif.astro";
+import WarpedGrid from "../components/WarpedGrid.astro";
 import { site } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 ---
@@ -13,9 +13,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <BaseLayout>
   <SiteHeader />
 
-  <main id="contenido">
+  <div class="opening-chapter" data-chapter="ink">
+    <WarpedGrid variant="opening" tone="on-ink" class="opening-chapter__grid" />
     <section class="hero page-shell" id="inicio" aria-labelledby="hero-title">
-      <div class="hero__frame">
+      <div class="hero__media" data-hero-media>
         <HeroImage />
         <div class="hero__content">
           <h1 id="hero-title">Herrería y fabricación a medida</h1>
@@ -29,9 +30,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         </div>
       </div>
     </section>
+  </div>
 
+  <main id="contenido">
     <section class="portfolio page-shell" id="trabajos" aria-labelledby="portfolio-title">
-      <StructureMotif class="portfolio__motif" />
       <header class="section-heading" data-reveal="heading">
         <h2 id="portfolio-title">Trabajos seleccionados</h2>
         <p>
@@ -42,7 +44,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </section>
 
     <section class="capabilities" id="servicios" aria-labelledby="capabilities-title">
-      <StructureMotif class="capabilities__motif" />
+      <WarpedGrid variant="capabilities" tone="on-canvas" class="capabilities__grid" />
       <div class="capabilities__inner page-shell">
         <div class="capabilities__intro" data-reveal="heading">
           <h2 id="capabilities-title">Trabajo en metal y madera.</h2>
@@ -69,7 +71,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     </section>
 
     <section class="craft" aria-labelledby="craft-title">
-      <StructureMotif class="craft__motif" />
       <div class="craft__inner page-shell">
         <header class="craft__heading" data-reveal="heading">
           <h2 id="craft-title">Piezas a medida.</h2>

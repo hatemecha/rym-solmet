@@ -228,10 +228,10 @@ El grain nunca debe leerse como textura de acero digital, papel reciclado
 decorativo ni filtro vintage. Debe sentirse como una superficie mate real,
 casi imperceptible de un vistazo.
 
-El motivo SVG provisto de líneas estructurales puede entrar sólo en superficies
-sin fotografía y en los intersticios amplios del portfolio. Se usa muy ampliado,
-recortado por los bordes y con contraste bajo; se mueve apenas con el scroll.
-No debe leerse como mapa, patrón industrial literal ni textura aplicada.
+El sistema gráfico secundario es una retícula estructural regular que en zonas
+puntuales se deforma, curva o abre. Se implementa como composiciones SVG
+diseñadas (`WarpedGrid`) en apertura, qué hacemos y contacto. Cada una usa líneas
+densas con deformación visible en zonas puntuales y hairlines de contraste bajo.
 
 ## Shapes
 

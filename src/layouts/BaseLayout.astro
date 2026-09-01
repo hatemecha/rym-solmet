@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
 
-import BrandLogo from "../components/BrandLogo.astro";
 import MotionController from "../components/MotionController.astro";
 import { site } from "../data/site";
 
@@ -14,7 +13,6 @@ const { title = site.title, description = site.description } = Astro.props;
 const base = import.meta.env.BASE_URL.endsWith("/")
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
-const year = new Date().getFullYear();
 ---
 
 <!doctype html>
@@ -23,7 +21,7 @@ const year = new Date().getFullYear();
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f2f0eb" />
+    <meta name="theme-color" content="#111210" />
     <meta name="color-scheme" content="light" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_AR" />
@@ -35,18 +33,6 @@ const year = new Date().getFullYear();
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <slot />
-    <footer class="site-footer">
-      <div class="site-footer__inner page-shell">
-        <div>
-          <BrandLogo class="site-footer__brand" />
-          <p class="site-footer__meta">© {year} · {site.location}</p>
-        </div>
-        <div class="site-footer__links" aria-label="Contacto en el pie">
-          <a href={site.whatsapp}>WhatsApp</a>
-          <a href={site.mailto}>Correo</a>
-        </div>
-      </div>
-    </footer>
     <MotionController />
   </body>
 </html>

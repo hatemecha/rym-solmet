@@ -2,7 +2,6 @@
 import { Picture } from "astro:assets";
 
 import { featuredProjects } from "../data/projects";
-import StructureMotif from "./StructureMotif.astro";
 ---
 
 <div class="project-grid">
@@ -12,7 +11,6 @@ import StructureMotif from "./StructureMotif.astro";
         class={`project project--${index + 1} project--${project.layout}`}
         id={project.slug}
       >
-        {index === 2 && <StructureMotif class="project__motif" />}
         <div
           class:list={["project__media", { "project__media--pair": project.images.length > 1 }]}
           data-reveal="image"
