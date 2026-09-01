@@ -23,31 +23,12 @@ const year = new Date().getFullYear();
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#f2f0eb" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="light" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="es_AR" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-    <script is:inline>
-      (() => {
-        let stored = null;
-        try {
-          stored = localStorage.getItem("rym-solmet-theme");
-        } catch {
-          // Usa la preferencia del sistema cuando el almacenamiento no está disponible.
-        }
-        const theme = stored === "light" || stored === "dark"
-          ? stored
-          : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-        document.documentElement.dataset.theme = theme;
-        document.documentElement.style.colorScheme = theme;
-        document.querySelector('meta[name="theme-color"]')?.setAttribute(
-          "content",
-          theme === "dark" ? "#111310" : "#f2f0eb",
-        );
-      })();
-    </script>
     <title>{title}</title>
   </head>
   <body>
@@ -65,5 +46,32 @@ const year = new Date().getFullYear();
         </div>
       </div>
     </footer>
+    <script is:inline>
+      (() => {
+        const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+        const items = [...document.querySelectorAll("[data-reveal]")];
+
+        if (!items.length || reducedMotion.matches || !("IntersectionObserver" in window)) {
+          return;
+        }
+
+        document.documentElement.classList.add("has-scroll-reveal");
+        const reveal = (entry) => {
+          const element = entry.target;
+          const delay = element.dataset.revealDelay;
+          if (delay) element.style.transitionDelay = `${delay}ms`;
+          element.classList.add("is-revealed");
+        };
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            reveal(entry);
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -7%" });
+
+        items.forEach((item) => observer.observe(item));
+      })();
+    </script>
   </body>
 </html>

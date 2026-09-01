@@ -5,13 +5,13 @@ import { site } from "../data/site";
 
 <section class="contact" id="contacto" aria-labelledby="contact-title">
   <div class="contact__inner page-shell">
-    <div class="contact__intro">
-      <h2 id="contact-title">Contanos qué necesitás.</h2>
+    <div class="contact__intro" data-reveal="heading">
+      <h2 id="contact-title">Consultas de trabajo.</h2>
       <p>
-        Consultas por trabajos de herrería y fabricación a medida en {site.location}.
+        Herrería y fabricación a medida en {site.location}.
       </p>
     </div>
-    <div class="contact__panel">
+    <div class="contact__panel" data-reveal="panel" data-reveal-delay="100">
       <a class="contact__primary" href={site.whatsapp}>
         <span>Consultar por WhatsApp</span>
         <ArrowIcon />

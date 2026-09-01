@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 
-import logo from "../assets/brand/logosolmet.png";
+import logo from "../assets/brand/logosolmet-clean.png";
 
 interface Props {
   class?: string;
@@ -16,7 +16,7 @@ const { class: className, priority = false } = Astro.props;
     src={logo}
     alt="RYM Solmet"
     widths={[160, 320]}
-    sizes="160px"
+    sizes="(max-width: 767px) 116px, 152px"
     loading={priority ? "eager" : "lazy"}
     decoding={priority ? "sync" : "async"}
     quality={92}

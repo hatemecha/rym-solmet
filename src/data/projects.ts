@@ -10,7 +10,6 @@ import divisor01 from "../assets/projects/divisor-madera-metal/01.jpeg";
 import fachada01 from "../assets/projects/fachada-porton-metalico/01.jpeg";
 import frenteParrilla01 from "../assets/projects/frente-parrilla-metalico/01.jpeg";
 import frenteParrilla02 from "../assets/projects/frente-parrilla-metalico/02.jpeg";
-import frenteRejas01 from "../assets/projects/frente-rejas-vivienda/01.jpeg";
 import galpon01 from "../assets/projects/galpon-estructura-metalica/01.jpeg";
 import galpon02 from "../assets/projects/galpon-estructura-metalica/02.jpeg";
 import invernadero01 from "../assets/projects/invernadero-metalico/01.jpeg";
@@ -290,10 +289,8 @@ export const craftProjects = projects
   .filter((project) => project.section === "craft")
   .sort((a, b) => a.order - b.order);
 
-export const heroSlides: ProjectImage[] = projects.flatMap((project) => project.images);
-
 export const heroImage: ProjectImage = {
-  src: frenteRejas01,
-  alt: "Frente de vivienda con rejas, portón y puerta de estructura metálica",
-  focalPoint: "50% 46%",
+  src: galpon02,
+  alt: "Interior de un galpón durante el montaje de la estructura metálica del techo",
+  focalPoint: "50% 35%",
 };

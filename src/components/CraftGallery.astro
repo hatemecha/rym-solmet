@@ -14,6 +14,8 @@ import { craftProjects } from "../data/projects";
             <figure
               class={`craft-item craft-item--${project.order}`}
               data-craft-slide
+              data-reveal="image"
+              data-reveal-delay={String(index * 80)}
               hidden={index !== 0}
             >
               <Picture

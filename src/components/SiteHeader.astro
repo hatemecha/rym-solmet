@@ -1,7 +1,6 @@
 ---
 import ArrowIcon from "./ArrowIcon.astro";
 import BrandLogo from "./BrandLogo.astro";
-import ThemeToggle from "./ThemeToggle.astro";
 import { site } from "../data/site";
 ---
 
@@ -15,7 +14,6 @@ import { site } from "../data/site";
         <a href="#trabajos">Trabajos</a>
         <a href="#servicios">Qué hacemos</a>
       </div>
-      <ThemeToggle />
       <a class="site-nav__contact" href={site.whatsapp} aria-label="Consultar por WhatsApp">
         <span>Consultar</span>
         <ArrowIcon />
@@ -23,11 +21,3 @@ import { site } from "../data/site";
     </nav>
   </div>
 </header>
-
-<aside class="mobile-action" aria-label="Consulta rápida">
-  <p>{site.location}</p>
-  <a href={site.whatsapp}>
-    Consultar
-    <ArrowIcon />
-  </a>
-</aside>

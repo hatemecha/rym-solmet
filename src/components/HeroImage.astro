@@ -1,0 +1,21 @@
+---
+import { Picture } from "astro:assets";
+
+import { heroImage } from "../data/projects";
+---
+
+<div class="hero__image">
+  <Picture
+    src={heroImage.src}
+    formats={["avif", "webp"]}
+    fallbackFormat="jpeg"
+    widths={[480, 800, 1200, 1600]}
+    sizes="(max-width: 767px) calc(100vw - 32px), calc(100vw - 96px)"
+    alt={heroImage.alt}
+    loading="eager"
+    decoding="sync"
+    fetchpriority="high"
+    quality={86}
+    style={heroImage.focalPoint ? `object-position: ${heroImage.focalPoint}` : undefined}
+  />
+</div>
