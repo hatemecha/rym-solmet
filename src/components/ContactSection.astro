@@ -1,10 +1,7 @@
 ---
 import ArrowIcon from "./ArrowIcon.astro";
-import BrandLogo from "./BrandLogo.astro";
 import WarpedGrid from "./WarpedGrid.astro";
 import { site } from "../data/site";
-
-const year = new Date().getFullYear();
 ---
 
 <section class="closing-chapter contact" id="contacto" aria-labelledby="contact-title" data-chapter="ink">
@@ -39,14 +36,4 @@ const year = new Date().getFullYear();
       </div>
     </div>
   </div>
-  <footer class="site-footer">
-    <div class="site-footer__inner page-shell">
-      <BrandLogo class="site-footer__brand" />
-      <p class="site-footer__meta">© {year} · {site.location}</p>
-      <div class="site-footer__links" aria-label="Contacto en el pie">
-        <a href={site.whatsapp}>WhatsApp</a>
-        <a href={site.mailto}>Correo</a>
-      </div>
-    </div>
-  </footer>
 </section>

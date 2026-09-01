@@ -1,0 +1,17 @@
+---
+import BrandLogo from "./BrandLogo.astro";
+import { site } from "../data/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner page-shell">
+    <BrandLogo class="site-footer__brand" />
+    <p class="site-footer__meta">© {year} · {site.location}</p>
+    <nav class="site-footer__links" aria-label="Contacto en el pie">
+      <a href={site.whatsapp}>WhatsApp</a>
+      <a href={site.mailto}>Correo</a>
+    </nav>
+  </div>
+</footer>

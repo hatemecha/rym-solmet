@@ -44,7 +44,7 @@ La evaluación comienza mirando fotografías de portones, cerramientos, estructu
 
 ## Evidence on Hand
 
-Hay 21 fotografías reales organizadas en `src/assets/projects/` y un logo gráfico provisto por el emprendimiento en `src/assets/brand/logosolmet.png`. No se dispone de Instagram, testimonios, textos históricos ni datos verificables sobre antigüedad.
+Hay 21 fotografías reales organizadas en `src/assets/projects/`, el logo original provisto por el emprendimiento en `src/assets/brand/logosolmet.png` y su derivado limpio para interfaz en `src/assets/brand/logosolmet-clean.png`. No se dispone de Instagram, testimonios, textos históricos ni datos verificables sobre antigüedad.
 
 ## Product Principles
 

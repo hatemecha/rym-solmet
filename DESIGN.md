@@ -6,6 +6,7 @@ colors:
   ink: "#111210"
   ink-muted: "#4F5250"
   canvas: "#F2F0EB"
+  canvas-raised: "#EBE8E2"
   steel: "#747878"
   steel-light: "#C9CCCA"
   steel-surface: "#D8D9D4"
@@ -106,12 +107,24 @@ La interfaz es esencialmente monocromática.
 
 - `ink` es el color principal de texto y elementos oscuros.
 - `canvas` es el fondo predominante: cálido, nunca blanco digital puro.
+- `canvas-raised` separa capítulos fotográficos secundarios sin simular elevación.
 - `steel` y `steel-light` se usan para metadata, líneas y elementos secundarios.
 - `steel-surface` es una superficie clara de transición para capítulos sin fotografía;
   evita que el recorrido dependa sólo de canvas e ink.
 - `white` se reserva para contraste puntual.
 
 Las fotografías aportan el color.
+
+Las superficies forman una escala neutral propia, inspirada en la disciplina de
+escalas como Radix pero mantenida como tokens locales sin dependencia externa.
+La secuencia de producción es deliberada:
+
+- apertura: `ink` con retícula;
+- trabajos seleccionados: `canvas` con retícula estructural tenue;
+- qué hacemos: `steel-surface` liso;
+- piezas a medida: `canvas-raised` liso;
+- contacto: `ink` con retícula;
+- footer: `canvas-raised` liso.
 
 El sitio usa una única dirección clara: papel cálido, tinta carbón y
 fotografías reales sin filtros. El negro se reserva para bandas de contraste,
@@ -163,7 +176,10 @@ Desktop:
 - grid de 12 columnas;
 - ancho máximo aproximado de 1440px;
 - gutters generosos;
-- grandes espacios entre secciones.
+- contraste tonal inequívoco entre capítulos consecutivos;
+- el portfolio repite un ciclo editorial de ocho posiciones. Los proyectos
+  nuevos heredan ese ciclo automáticamente y nunca caen en un ancho completo
+  genérico por falta de una regla individual.
 
 Mobile:
 - grid simple;
@@ -182,13 +198,16 @@ Combinar:
 - espacios vacíos;
 - texto breve.
 
-La geometría de las estructuras fotografiadas puede influir en la
-composición general del sitio.
+La geometría de las estructuras fotografiadas puede influir en la composición
+general del sitio. El espacio negativo debe ser intencional: en pares de alturas
+desiguales, la pieza corta se alinea para sostener el ritmo de la fila y la
+retícula del portfolio ocupa los vacíos sin convertirse en decoración dominante.
 
 Evitar grids de cards repetitivas.
 
 Usar una única fotografía estática en el hero, sin filtros ni rotación. El
-scroll usa Lenis con respuesta natural en dispositivos táctiles y GSAP /
+scroll usa Lenis sólo con puntero fino; dispositivos táctiles conservan scroll
+nativo. GSAP /
 ScrollTrigger para acompañar el recorrido: máscaras breves en titulares e
 imágenes, captions apenas posteriores, construcción de líneas y parallax muy
 leve en pocas fotografías estructurales. Nunca debe impedir la navegación,
@@ -230,8 +249,10 @@ casi imperceptible de un vistazo.
 
 El sistema gráfico secundario es una retícula estructural regular que en zonas
 puntuales se deforma, curva o abre. Se implementa como composiciones SVG
-diseñadas (`WarpedGrid`) en apertura, qué hacemos y contacto. Cada una usa líneas
-densas con deformación visible en zonas puntuales y hairlines de contraste bajo.
+diseñadas (`WarpedGrid`) únicamente en apertura, portfolio y contacto. “Qué
+hacemos”, piezas a medida y footer son superficies lisas para que la retícula
+marque capítulos en lugar de convertirse en ruido continuo. Cada variante usa
+deformación visible y hairlines de contraste bajo.
 
 ## Shapes
 
@@ -252,7 +273,8 @@ chapas y estructuras, sin imitarlos literalmente.
 Mínimo y silencioso.
 
 Usar el asset limpio del logo a la izquierda, sin recortes ni desplazamientos
-CSS. Su tinta negra se mantiene sobre la única dirección clara.
+CSS. Su tinta negra se conserva sobre superficies claras y puede invertirse a
+blanco únicamente dentro de bandas `ink`, como header y contacto.
 Navegación a la derecha.
 
 Sin barras promocionales ni elementos decorativos.
@@ -269,6 +291,10 @@ Una entrada de proyecto contiene únicamente lo necesario:
 - año si se conoce.
 
 La fotografía domina sobre el texto.
+
+La composición no depende de selectores por índice absoluto. Usa slots
+repetibles (`project--slot-1` a `project--slot-8`) derivados del orden de
+`src/data/projects.ts`, de modo que sumar proyectos preserve el ritmo responsive.
 
 ### Buttons
 

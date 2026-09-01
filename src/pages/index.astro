@@ -4,6 +4,7 @@ import CraftGallery from "../components/CraftGallery.astro";
 import ContactSection from "../components/ContactSection.astro";
 import HeroImage from "../components/HeroImage.astro";
 import ProjectGallery from "../components/ProjectGallery.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import WarpedGrid from "../components/WarpedGrid.astro";
 import { site } from "../data/site";
@@ -33,18 +34,20 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   </div>
 
   <main id="contenido">
-    <section class="portfolio page-shell" id="trabajos" aria-labelledby="portfolio-title">
-      <header class="section-heading" data-reveal="heading">
-        <h2 id="portfolio-title">Trabajos seleccionados</h2>
-        <p>
-          Trabajos terminados en Bahía Blanca y alrededores.
-        </p>
-      </header>
-      <ProjectGallery />
+    <section class="portfolio" id="trabajos" aria-labelledby="portfolio-title">
+      <WarpedGrid variant="portfolio" tone="on-canvas" class="portfolio__grid" stretch />
+      <div class="portfolio__inner page-shell">
+        <header class="section-heading" data-reveal="heading">
+          <h2 id="portfolio-title">Trabajos seleccionados</h2>
+          <p>
+            Trabajos terminados en Bahía Blanca y alrededores.
+          </p>
+        </header>
+        <ProjectGallery />
+      </div>
     </section>
 
     <section class="capabilities" id="servicios" aria-labelledby="capabilities-title">
-      <WarpedGrid variant="capabilities" tone="on-canvas" class="capabilities__grid" />
       <div class="capabilities__inner page-shell">
         <div class="capabilities__intro" data-reveal="heading">
           <h2 id="capabilities-title">Trabajo en metal y madera.</h2>
@@ -82,4 +85,5 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
     <ContactSection />
   </main>
+  <SiteFooter />
 </BaseLayout>

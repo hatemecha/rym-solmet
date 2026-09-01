@@ -9,16 +9,16 @@
     gsap.registerPlugin(ScrollTrigger);
 
     const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
-    const lenis = new Lenis({
-      duration: coarsePointer ? 0.8 : 1.05,
-      smoothWheel: !coarsePointer,
-      syncTouch: false,
-      touchMultiplier: 1,
-    });
+    if (!coarsePointer) {
+      const lenis = new Lenis({
+        duration: 1.05,
+        smoothWheel: true,
+      });
 
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add((time) => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+    }
     document.documentElement.classList.add("has-motion");
 
     const withTrigger = (target: Element, options: { from: gsap.TweenVars; to: gsap.TweenVars }) => {
@@ -81,7 +81,9 @@
       });
     }
 
-    document.querySelectorAll(".project--3 .project__media img, .project--5 .project__media img").forEach((image) => {
+    document
+      .querySelectorAll(".project--slot-3 .project__media img, .project--slot-5 .project__media img")
+      .forEach((image) => {
       if (coarsePointer) {
         return;
       }
@@ -91,7 +93,7 @@
         ease: "none",
         scrollTrigger: { trigger: image.closest(".project"), start: "top bottom", end: "bottom top", scrub: 0.75 },
       });
-    });
+      });
 
     const list = document.querySelector(".capabilities__list");
     if (list) {
@@ -105,6 +107,10 @@
     }
 
     document.querySelectorAll("[data-warped-grid]").forEach((grid) => {
+      if (grid.classList.contains("portfolio__grid")) {
+        return;
+      }
+
       const parent = grid.parentElement;
       if (!parent) {
         return;

@@ -10,18 +10,23 @@ interface Props {
   variant: WarpedGridVariant;
   tone?: WarpedGridTone;
   class?: string;
+  stretch?: boolean;
 }
 
-const { variant, tone = "on-canvas", class: className } = Astro.props;
-const grid = buildWarpedGrid(variant);
+const { variant, tone = "on-canvas", class: className, stretch = false } = Astro.props;
+const viewBoxHeight = variant === "portfolio" ? 1800 : 900;
+const grid = buildWarpedGrid(
+  variant,
+  variant === "portfolio" ? { cols: 18, rows: 32, height: viewBoxHeight } : {},
+);
 const stroke = gridStrokeForTone(tone);
 ---
 
 <svg
   class:list={["warped-grid", className]}
   data-warped-grid={variant}
-  viewBox="0 0 1440 900"
-  preserveAspectRatio="xMidYMid slice"
+  viewBox={`0 0 1440 ${viewBoxHeight}`}
+  preserveAspectRatio={stretch ? "none" : "xMidYMid slice"}
   aria-hidden="true"
   focusable="false"
 >

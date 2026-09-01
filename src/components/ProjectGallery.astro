@@ -6,9 +6,12 @@ import { featuredProjects } from "../data/projects";
 
 <div class="project-grid">
   {
-    featuredProjects.map((project, index) => (
+    featuredProjects.map((project, index) => {
+      const slot = (index % 8) + 1;
+
+      return (
       <article
-        class={`project project--${index + 1} project--${project.layout}`}
+        class={`project project--slot-${slot} project--${project.layout}`}
         id={project.slug}
       >
         <div
@@ -35,6 +38,7 @@ import { featuredProjects } from "../data/projects";
           <p>{project.materials}</p>
         </div>
       </article>
-    ))
+      );
+    })
   }
 </div>

@@ -52,9 +52,11 @@ Las fotografías originales viven en `src/assets/projects/<proyecto>/`. Los tít
 
 Cada proyecto usa un slug descriptivo y fotografías numeradas como `01.jpeg`, `02.jpeg`, etc. Las imágenes se conservan en su resolución original; Astro produce las variantes optimizadas durante el build.
 
-El logo vive en `src/assets/brand/logosolmet.png`. La interfaz incluye temas claro y oscuro; sus tokens y reglas están documentados en `DESIGN.md`.
+El logo original vive en `src/assets/brand/logosolmet.png`; la interfaz usa el derivado limpio `src/assets/brand/logosolmet-clean.png`. El sitio mantiene una única dirección clara y sus tokens y reglas están documentados en `DESIGN.md`.
 
-Tipografías del logo: Oxanium (titulares), Inter Tight (etiquetas) e Inter (cuerpo). Se cargan desde `src/styles/*.css`.
+Tipografías de interfaz: Oxanium en titulares y Archivo en cuerpo, navegación, etiquetas y CTAs. Se cargan desde `src/styles/*.css`.
+
+Los proyectos destacados reciben automáticamente uno de ocho slots editoriales repetibles. Para sumar fotografías o cambiar el orden, editá sólo `src/data/projects.ts`; no hace falta agregar reglas CSS por proyecto.
 
 ## Contexto del proyecto
 
