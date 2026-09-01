@@ -1,0 +1,24 @@
+---
+import { Image } from "astro:assets";
+
+import logo from "../assets/brand/logosolmet.png";
+
+interface Props {
+  class?: string;
+  priority?: boolean;
+}
+
+const { class: className, priority = false } = Astro.props;
+---
+
+<span class:list={["brand-logo", className]}>
+  <Image
+    src={logo}
+    alt="RYM Solmet"
+    widths={[160, 320]}
+    sizes="160px"
+    loading={priority ? "eager" : "lazy"}
+    decoding={priority ? "sync" : "async"}
+    quality={92}
+  />
+</span>

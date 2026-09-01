@@ -1,0 +1,95 @@
+---
+import { Picture } from "astro:assets";
+
+import { heroSlides } from "../data/projects";
+---
+
+<div class="hero__slideshow" data-hero-slideshow>
+  {
+    heroSlides.map((image, index) => (
+      <div
+        class:list={["hero__slide", { "is-active": index === 0 }]}
+        data-hero-slide
+      >
+        <Picture
+          src={image.src}
+          formats={["avif", "webp"]}
+          fallbackFormat="jpeg"
+          widths={[480, 800, 1200, 1600]}
+          sizes="(max-width: 767px) calc(100vw - 32px), calc(100vw - 96px)"
+          alt=""
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding={index === 0 ? "sync" : "async"}
+          fetchpriority={index === 0 ? "high" : "auto"}
+          quality={86}
+          style={image.focalPoint ? `object-position: ${image.focalPoint}` : undefined}
+        />
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  const slideshows = document.querySelectorAll<HTMLElement>("[data-hero-slideshow]");
+
+  slideshows.forEach((slideshow) => {
+    const slides = [...slideshow.querySelectorAll<HTMLElement>("[data-hero-slide]")];
+
+    if (slides.length < 2) {
+      return;
+    }
+
+    const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const intervalMs = 5500;
+    let activeIndex = 0;
+    let timer: number | undefined;
+
+    const setActive = (nextIndex: number) => {
+      slides[activeIndex]?.classList.remove("is-active");
+      activeIndex = nextIndex;
+      slides[activeIndex]?.classList.add("is-active");
+    };
+
+    const advance = () => {
+      setActive((activeIndex + 1) % slides.length);
+    };
+
+    const stop = () => {
+      if (timer !== undefined) {
+        window.clearInterval(timer);
+        timer = undefined;
+      }
+    };
+
+    const start = () => {
+      stop();
+
+      if (reducedMotion.matches || document.hidden) {
+        return;
+      }
+
+      timer = window.setInterval(advance, intervalMs);
+    };
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stop();
+        return;
+      }
+
+      start();
+    });
+
+    reducedMotion.addEventListener("change", () => {
+      if (reducedMotion.matches) {
+        stop();
+        setActive(0);
+        return;
+      }
+
+      start();
+    });
+
+    start();
+  });
+</script>

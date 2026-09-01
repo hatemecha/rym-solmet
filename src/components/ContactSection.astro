@@ -1,0 +1,35 @@
+---
+import ArrowIcon from "./ArrowIcon.astro";
+import { site } from "../data/site";
+---
+
+<section class="contact" id="contacto" aria-labelledby="contact-title">
+  <div class="contact__inner page-shell">
+    <div class="contact__intro">
+      <h2 id="contact-title">Contanos qué necesitás.</h2>
+      <p>
+        Consultas por trabajos de herrería y fabricación a medida en {site.location}.
+      </p>
+    </div>
+    <div class="contact__panel">
+      <a class="contact__primary" href={site.whatsapp}>
+        <span>Consultar por WhatsApp</span>
+        <ArrowIcon />
+      </a>
+      <dl>
+        <div>
+          <dt>Contacto</dt>
+          <dd>{site.contactName}</dd>
+        </div>
+        <div>
+          <dt>Teléfono</dt>
+          <dd><a href={site.whatsapp}>{site.phoneDisplay}</a></dd>
+        </div>
+        <div>
+          <dt>Correo</dt>
+          <dd><a href={site.mailto}>{site.email}</a></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>

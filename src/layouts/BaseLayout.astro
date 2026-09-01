@@ -1,0 +1,69 @@
+---
+import "../styles/global.css";
+
+import BrandLogo from "../components/BrandLogo.astro";
+import { site } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = site.title, description = site.description } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith("/")
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f2f0eb" />
+    <meta name="color-scheme" content="light dark" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <script is:inline>
+      (() => {
+        let stored = null;
+        try {
+          stored = localStorage.getItem("rym-solmet-theme");
+        } catch {
+          // Usa la preferencia del sistema cuando el almacenamiento no está disponible.
+        }
+        const theme = stored === "light" || stored === "dark"
+          ? stored
+          : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]')?.setAttribute(
+          "content",
+          theme === "dark" ? "#111310" : "#f2f0eb",
+        );
+      })();
+    </script>
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <slot />
+    <footer class="site-footer">
+      <div class="site-footer__inner page-shell">
+        <div>
+          <BrandLogo class="site-footer__brand" />
+          <p class="site-footer__meta">© {year} · {site.location}</p>
+        </div>
+        <div class="site-footer__links" aria-label="Contacto en el pie">
+          <a href={site.whatsapp}>WhatsApp</a>
+          <a href={site.mailto}>Correo</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

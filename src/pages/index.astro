@@ -1,0 +1,81 @@
+---
+import ArrowIcon from "../components/ArrowIcon.astro";
+import CraftGallery from "../components/CraftGallery.astro";
+import ContactSection from "../components/ContactSection.astro";
+import HeroSlideshow from "../components/HeroSlideshow.astro";
+import ProjectGallery from "../components/ProjectGallery.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { site } from "../data/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <SiteHeader />
+
+  <main id="contenido">
+    <section class="hero page-shell" id="inicio" aria-labelledby="hero-title">
+      <div class="hero__frame">
+        <HeroSlideshow />
+        <div class="hero__scrim" aria-hidden="true"></div>
+        <div class="hero__content">
+          <h1 id="hero-title">Herrería y fabricación a medida</h1>
+          <div class="hero__meta">
+            <p>{site.location}</p>
+            <a href={site.whatsapp}>
+              Consultar por WhatsApp
+              <ArrowIcon />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portfolio page-shell" id="trabajos" aria-labelledby="portfolio-title">
+      <header class="section-heading">
+        <h2 id="portfolio-title">Trabajos seleccionados</h2>
+        <p>
+          Una muestra de trabajos terminados en Bahía Blanca y la zona.
+        </p>
+      </header>
+      <ProjectGallery />
+    </section>
+
+    <section class="capabilities" id="servicios" aria-labelledby="capabilities-title">
+      <div class="capabilities__inner page-shell">
+        <div class="capabilities__intro">
+          <h2 id="capabilities-title">Metal, madera y soluciones a medida.</h2>
+          <p>
+            Portones, galpones, frentes de parrilla o una pieza para casa: cada trabajo se mide y fabrica en el lugar.
+          </p>
+        </div>
+        <ul class="capabilities__list" aria-label="Trabajos que realiza RYM Solmet">
+          {
+            [
+              "Estructuras metálicas",
+              "Galpones y cubiertas",
+              "Frentes de parrilla",
+              "Portones y cerramientos",
+              "Trabajos artesanales",
+            ].map((capability) => (
+              <li>
+                <span>{capability}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="craft" aria-labelledby="craft-title">
+      <div class="craft__inner page-shell">
+        <header class="craft__heading">
+          <h2 id="craft-title">También en otra escala.</h2>
+          <p>Piezas útiles, fabricadas con el mismo oficio.</p>
+        </header>
+        <CraftGallery />
+      </div>
+    </section>
+
+    <ContactSection />
+  </main>
+</BaseLayout>
