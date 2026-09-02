@@ -194,3 +194,57 @@ Check y build correctos. Capturas a 320, 768, 1024 y 1440px en
 Detector ejecutado una vez en ambos componentes: diez avisos preexistentes
 sobre valores alfa de máscaras, documentados en DESIGN.md; sin ignores.
 Cambio exclusivo de capas decorativas; sin pruebas en dispositivos físicos.
+
+## Negro recuperado y movimiento selectivo
+
+Se reemplazó la mezcla `screen` del GrainField por `overlay`: el tile sigue en
+200px y el contraste en 450 %, con opacidad de 48 %. La base visible vuelve a
+`#111210`; el borde tonal usa `soft-light` al 24 % y ya no forma una mancha gris.
+Se retiraron las capas duplicadas de ruido de apertura, contacto, capacidades,
+piezas y footer. Sólo apertura y contacto conservan GrainField; capacidades,
+piezas y footer vuelven a ser superficies lisas. Fotografías, captions y copy no
+cambiaron y no reciben filtros ni textura.
+
+Se investigaron cinco sitios reales: Temper & Grit, Zahner, Herzog & de Meuron,
+Snøhetta y Caliper Studio. La decisión común fue mantener evidencia fotográfica,
+navegación directa y una interfaz retirada. Los enlaces, observaciones y
+decisiones particulares quedaron en `TODO.md`. Se descartaron filtros y vistas
+alternativas por el volumen actual, overlays sobre fotos, más copy y una nueva
+secuencia animada en el hero.
+
+La única intervención nueva es la malla de contacto en desktop con puntero fino.
+La máscara permanece inmóvil y un tile interior con 12px de sobrecobertura se
+traslada 8px × −6px, ida y vuelta en 26 segundos. GSAP pausa el tween fuera de
+pantalla y quita `will-change`; `visibilitychange` cubre la pestaña oculta. En
+móvil y con movimiento reducido no se crea el tween. El ruido permanece estático.
+Se descartó mover la malla de apertura porque el hero ya tiene entrada de foto y
+parallax selectivo.
+
+### Verificación de esta sesión
+
+- `npm run check`: 0 errores, 0 warnings, 0 hints.
+- `npm run build`: build estático completo, sitemap generado y 221 variantes de
+  imagen resueltas desde caché.
+- Chromium local en 320, 768, 1024, 1440 y 1920px: sin overflow horizontal; un
+  H1 y cuatro H2 en orden; todos los `alt` presentes. El primer render de 768px
+  se capturó antes de cargar la foto y se repitió: imagen completa de 768px
+  naturales, sin fallo de recurso.
+- A 1920px, apertura, portfolio y contacto midieron el ancho completo del
+  viewport útil. Apertura, contacto y footer conservaron `rgb(17, 18, 16)`.
+- Movimiento: en contacto el transform pasó de aproximadamente 0.13px a 2.67px
+  en cuatro segundos; fuera de pantalla permaneció idéntico durante dos segundos
+  y `will-change` volvió a `auto`. Carga inicial a 320px: transform `none`.
+- Build de producción: PhotoSwipe abrió por click, mostró “Puerta corrediza ·
+  Hierro y vidrio”, cerró con Escape y devolvió foco al enlace original. Los 17
+  enlaces fotográficos, cinco enlaces de WhatsApp y dos de correo conservaron
+  destino. Cero errores o warnings de consola en la comprobación final.
+- La automatización disponible no logró sintetizar Enter sobre el enlace en esta
+  ronda, aunque sí confirmó el foco y el fallback nativo; no se modificó el
+  manejador de galería. Tampoco pudo forzar `visibilityState: hidden`, porque las
+  pestañas del navegador integrado siguieron reportándose visibles. No se
+  probaron dispositivos físicos ni Safari/iOS.
+
+Detector Impeccable ejecutado una sola vez sobre los cuatro archivos visuales:
+diez avisos por negros con alfa usados exclusivamente como cobertura de máscaras
+y tres avisos tipográficos preexistentes. Ambos casos están documentados en
+`DESIGN.md`; no se añadieron ignores ni dependencias.

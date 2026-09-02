@@ -20,6 +20,8 @@ const { reverse = false } = Astro.props;
     position: absolute;
     inset: 0;
     background: var(--color-ink-muted);
+    opacity: 0.24;
+    mix-blend-mode: soft-light;
     mask-image: radial-gradient(ellipse at 100% 0%, #0009, transparent 65%);
   }
   .grain-field::after {
@@ -29,8 +31,8 @@ const { reverse = false } = Astro.props;
     background-image: var(--noise-image);
     background-size: 200px 200px;
     filter: grayscale(1) contrast(450%);
-    opacity: 0.2;
-    mix-blend-mode: screen;
+    opacity: 0.48;
+    mix-blend-mode: overlay;
   }
   .grain-field--reverse::before {
     mask-image: linear-gradient(#0006, transparent 30%, transparent 80%, #0002);

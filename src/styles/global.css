@@ -45,8 +45,6 @@
   --noise-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
   --noise-size: 12rem;
   --noise-opacity-base: 0.03;
-  --noise-opacity-raised: 0.042;
-  --noise-opacity-panel: 0.048;
 }
 
 *,
@@ -263,32 +261,6 @@ svg {
 
 .opening-chapter {
   padding-top: var(--header-height);
-}
-
-.closing-chapter::before,
-.opening-chapter::before,
-.craft::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: var(--noise-opacity-panel);
-  background-image: var(--noise-image);
-  background-size: var(--noise-size) var(--noise-size);
-  mix-blend-mode: overlay;
-}
-
-.capabilities::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: var(--noise-opacity-raised);
-  background-image: var(--noise-image);
-  background-size: var(--noise-size) var(--noise-size);
-  mix-blend-mode: soft-light;
 }
 
 .site-header {
@@ -949,18 +921,6 @@ svg {
   color: var(--color-canvas);
 }
 
-.site-footer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: var(--noise-opacity-raised);
-  background-image: var(--noise-image);
-  background-size: var(--noise-size) var(--noise-size);
-  mix-blend-mode: soft-light;
-}
-
 .site-footer__inner {
   position: relative;
   z-index: 1;
@@ -1293,8 +1253,6 @@ svg {
 @media (prefers-reduced-motion: reduce) {
   :root {
     --noise-opacity-base: 0.018;
-    --noise-opacity-raised: 0.024;
-    --noise-opacity-panel: 0.028;
   }
 
   html { scroll-behavior: auto; }

@@ -253,9 +253,11 @@ No usar glassmorphism.
 
 El grano base es sutil. GrainField usa ruido monocromático más notorio sobre
 todo el fondo de apertura y contacto: tile de 200px, contraste de 450 %,
-opacidad de 20 % y mezcla screen. El degradado conserva su atenuación en el
-borde superior derecho de apertura y los bordes de contacto; el ruido tiene
-su propia capa para seguir visible sin extender las manchas grises.
+opacidad de 48 % y mezcla overlay. Overlay conserva el valor medio de `ink` en
+lugar de aclararlo como screen. El degradado conserva su atenuación en el borde
+superior derecho de apertura y los bordes de contacto con 24 % de opacidad y
+mezcla soft-light; el ruido tiene su propia capa para seguir visible sin
+extender manchas grises. No se superponen otras capas de ruido en esas bandas.
 Capacidades, piezas y footer mantienen superficies lisas de descanso.
 No aplicar grano sobre fotografías, galerías, texto ni captions.
 
@@ -288,8 +290,12 @@ en THIRD_PARTY_NOTICES.md. La malla actual es geometría generada en el proyecto
 
 El movimiento se configura con `gsap.matchMedia`: desktop conserva máscaras,
 parallax selectivo y Lenis; mobile usa reveals cortos por transform, sin parallax
-continuo. Movimiento reducido devuelve el contenido estático. PhotoSwipe carga
-al abrir una imagen, agrupa por proyecto y conserva scroll y foco al cerrar.
+continuo. La única malla móvil es la de contacto en desktop con puntero fino:
+su tile interior recorre 8px × −6px con ida y vuelta en 26 segundos, mientras
+la máscara exterior permanece fija. Tiene 12px de sobrecobertura, se pausa fuera
+de pantalla o con la pestaña oculta y no mueve el ruido. Mobile y movimiento
+reducido conservan la malla estática. PhotoSwipe carga al abrir una imagen,
+agrupa por proyecto y conserva scroll y foco al cerrar.
 
 ## Shapes
 

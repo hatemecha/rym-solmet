@@ -4,7 +4,9 @@ interface Props { variant: "grid" | "dots" | "diagonal"; }
 const { variant } = Astro.props;
 ---
 
-<div class={`surface-pattern surface-pattern--${variant}`} style={{ backgroundImage: `url(${mesh})` }} data-surface-pattern={variant} aria-hidden="true"></div>
+<div class={`surface-pattern surface-pattern--${variant}`} data-surface-pattern={variant} aria-hidden="true">
+  <div class="surface-pattern__field" style={{ backgroundImage: `url(${mesh})` }}></div>
+</div>
 
 <style>
   .surface-pattern {
@@ -12,29 +14,40 @@ const { variant } = Astro.props;
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    background-repeat: repeat;
-    background-size: 900px 900px;
+    overflow: hidden;
     opacity: 0.13;
   }
+  .surface-pattern__field {
+    position: absolute;
+    inset: -12px;
+    background-repeat: repeat;
+    background-size: 900px 900px;
+  }
   .surface-pattern--grid {
-    background-position: center 35%;
     mask-image: radial-gradient(ellipse at 12% 55%, #0003, #0008 45%, #000 85%);
+  }
+  .surface-pattern--grid .surface-pattern__field {
+    background-position: center 35%;
   }
   .surface-pattern--dots {
     filter: invert(1);
     opacity: 0.16;
-    background-position: 38% -180px;
-    background-size: 1050px 1050px;
     mask-image: linear-gradient(#0004, #000 420px);
   }
+  .surface-pattern--dots .surface-pattern__field {
+    background-position: 38% -180px;
+    background-size: 1050px 1050px;
+  }
   .surface-pattern--diagonal {
-    background-position: 68% 80%;
-    background-size: 800px 800px;
     mask-image: linear-gradient(#000, #0005 32%, #0005 75%, #000);
   }
+  .surface-pattern--diagonal .surface-pattern__field {
+    background-position: 68% 80%;
+    background-size: 800px 800px;
+  }
   @media (max-width: 47.999rem) {
-    .surface-pattern { background-size: 620px 620px; }
-    .surface-pattern--dots { background-size: 740px 740px; }
-    .surface-pattern--diagonal { background-position: 45% center; }
+    .surface-pattern__field { background-size: 620px 620px; }
+    .surface-pattern--dots .surface-pattern__field { background-size: 740px 740px; }
+    .surface-pattern--diagonal .surface-pattern__field { background-position: 45% center; }
   }
 </style>

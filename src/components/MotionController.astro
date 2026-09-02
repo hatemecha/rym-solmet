@@ -34,6 +34,7 @@
   }, (context) => {
     const { desktop, reduced } = context.conditions!;
     let lenis: Lenis | undefined;
+    let cleanupPatternMotion = () => {};
     const tick = (time: number) => lenis?.raf(time * 1000);
     const pause = () => lenis?.stop();
     const resume = () => { lenis?.start(); lenis?.resize(); };
@@ -85,6 +86,41 @@
       const list = document.querySelector(".capabilities__list");
       if (list) reveal(list, { x: desktop ? -18 : -8, opacity: 0.35 }, { x: 0, opacity: 1 });
       if (desktop) {
+        const contactPattern = document.querySelector<HTMLElement>(
+          '[data-surface-pattern="diagonal"] .surface-pattern__field',
+        );
+        if (contactPattern) {
+          const patternMotion = gsap.to(contactPattern, {
+            x: 8,
+            y: -6,
+            duration: 13,
+            ease: "sine.inOut",
+            repeat: -1,
+            yoyo: true,
+            paused: true,
+          });
+          let patternTrigger: ScrollTrigger | undefined;
+          patternTrigger = ScrollTrigger.create({
+            trigger: ".closing-chapter",
+            start: "top bottom",
+            end: "bottom top",
+            onToggle: syncPatternMotion,
+          });
+          function syncPatternMotion() {
+            const shouldRun = patternTrigger?.isActive === true && document.visibilityState === "visible";
+            contactPattern!.style.willChange = shouldRun ? "transform" : "auto";
+            if (shouldRun) patternMotion.play();
+            else patternMotion.pause();
+          }
+          document.addEventListener("visibilitychange", syncPatternMotion);
+          syncPatternMotion();
+          cleanupPatternMotion = () => {
+            document.removeEventListener("visibilitychange", syncPatternMotion);
+            patternTrigger?.kill();
+            patternMotion.kill();
+            gsap.set(contactPattern, { clearProps: "transform,willChange" });
+          };
+        }
         gsap.to(".hero__image", {
           yPercent: 4, scale: 1.025, ease: "none",
           scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.65 },
@@ -97,6 +133,7 @@
       }
     }
     return () => {
+      cleanupPatternMotion();
       resize.disconnect();
       document.removeEventListener("gallery:open", pause);
       document.removeEventListener("gallery:close", resume);
