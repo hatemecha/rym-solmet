@@ -23,7 +23,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         <HeroImage />
         <div class="hero__content">
           <div class="hero__panel">
-          <h1 id="hero-title">Herrería y fabricación a medida</h1>
+          <h1 id="hero-title" data-hero-title>Herrería y fabricación a medida</h1>
           <div class="hero__meta">
             <p>{site.location}</p>
             <a href={site.whatsapp}>
@@ -33,6 +33,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           </div>
           </div>
         </div>
+        <span class="hero__scribe" aria-hidden="true">Estructuras metálicas · Galpones y cubiertas · Frentes de parrilla · Portones y cerramientos</span>
       </div>
     </section>
   </div>

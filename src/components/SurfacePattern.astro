@@ -6,6 +6,9 @@ const { variant } = Astro.props;
 
 <div class={`surface-pattern surface-pattern--${variant}`} data-surface-pattern={variant} aria-hidden="true">
   <div class="surface-pattern__field" style={{ backgroundImage: `url(${mesh})` }}></div>
+  {variant === "grid" && (
+    <div class="surface-pattern__field surface-pattern__field--focus" style={{ backgroundImage: `url(${mesh})` }}></div>
+  )}
 </div>
 
 <style>
@@ -22,6 +25,14 @@ const { variant } = Astro.props;
     inset: -12px;
     background-repeat: repeat;
     background-size: 900px 900px;
+  }
+  .surface-pattern__field--focus {
+    opacity: 0;
+    z-index: 1;
+    background-position: center 35%;
+    -webkit-mask-image: radial-gradient(circle var(--focus-r, 26%) at var(--focus-x, 50%) var(--focus-y, 50%), #000, transparent 72%);
+    mask-image: radial-gradient(circle var(--focus-r, 26%) at var(--focus-x, 50%) var(--focus-y, 50%), #000, transparent 72%);
+    will-change: transform, opacity;
   }
   .surface-pattern--grid {
     mask-image: radial-gradient(ellipse at 12% 55%, #0003, #0008 45%, #000 85%);

@@ -114,24 +114,44 @@
       .forEach((image) => gsap.to(image, { yPercent: -3, scale: 1.025, ease: "none", scrollTrigger: { trigger: image.closest(".project"), start: "top bottom", end: "bottom top", scrub: 0.75 } }));
 
     const openingPattern = document.querySelector<HTMLElement>('[data-surface-pattern="grid"] .surface-pattern__field');
+    const focusPattern = document.querySelector<HTMLElement>('[data-surface-pattern="grid"] .surface-pattern__field--focus');
     const hero = document.querySelector<HTMLElement>(".hero");
-    if (openingPattern && hero) {
-      const gridMotion = { horizontal: 7, vertical: 5, returnDuration: 0.7 };
+    if (openingPattern && focusPattern && hero) {
+      const gridMotion = { focusOffset: 8, radius: 26, focusOpacity: 0.85 };
       if (import.meta.env.DEV) {
         const { Pane } = await import("tweakpane");
-        const pane = new Pane({ title: "Malla del hero" }) as unknown as {
+        const pane = new Pane({ title: "Tensión local del hero" }) as unknown as {
           addBinding: (target: object, key: string, options: object) => void;
         };
-        pane.addBinding(gridMotion, "horizontal", { min: 0, max: 18, step: 0.5, label: "tensión X" });
-        pane.addBinding(gridMotion, "vertical", { min: 0, max: 14, step: 0.5, label: "tensión Y" });
-        pane.addBinding(gridMotion, "returnDuration", { min: 0.2, max: 2, step: 0.1, label: "retorno" });
+        pane.addBinding(gridMotion, "focusOffset", { min: 2, max: 18, step: 0.5, label: "desplazamiento" });
+        pane.addBinding(gridMotion, "radius", { min: 8, max: 42, step: 1, label: "radio" });
+        pane.addBinding(gridMotion, "focusOpacity", { min: 0.3, max: 1, step: 0.05, label: "presencia" });
       }
+      const applyFocus = (cx: number, cy: number) => {
+        focusPattern.style.setProperty("--focus-x", `${cx}%`);
+        focusPattern.style.setProperty("--focus-y", `${cy}%`);
+        focusPattern.style.setProperty("--focus-r", `${gridMotion.radius}%`);
+      };
+      const toX = gsap.quickTo(focusPattern, "x", { duration: 0.8, ease: "power2.out" });
+      const toY = gsap.quickTo(focusPattern, "y", { duration: 0.8, ease: "power2.out" });
+      const toOpacity = gsap.quickTo(focusPattern, "opacity", { duration: 0.3, ease: "power1.out" });
       const moveGrid = (event: PointerEvent) => {
         const bounds = hero.getBoundingClientRect();
-        gsap.to(openingPattern, { x: ((event.clientX - bounds.left) / bounds.width - 0.5) * gridMotion.horizontal, y: ((event.clientY - bounds.top) / bounds.height - 0.5) * gridMotion.vertical, duration: 0.8, ease: "power2.out", overwrite: true });
+        const px = (event.clientX - bounds.left) / bounds.width;
+        const py = (event.clientY - bounds.top) / bounds.height;
+        applyFocus(px * 100, py * 100);
+        toX((px - 0.5) * gridMotion.focusOffset);
+        toY((py - 0.5) * gridMotion.focusOffset);
+        toOpacity(gridMotion.focusOpacity);
       };
+      const leaveGrid = () => {
+        toOpacity(0);
+        toX(0);
+        toY(0);
+      };
+      applyFocus(50, 50);
       hero.addEventListener("pointermove", moveGrid);
-      hero.addEventListener("pointerleave", () => gsap.to(openingPattern, { x: 0, y: 0, duration: gridMotion.returnDuration, ease: "power2.out", overwrite: true }));
+      hero.addEventListener("pointerleave", leaveGrid);
     }
     document.fonts.ready.then(() => ScrollTrigger.refresh());
   }

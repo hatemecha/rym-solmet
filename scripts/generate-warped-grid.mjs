@@ -11,9 +11,9 @@ function warp(u, v) {
 }
 const paths = [];
 for (const vertical of [false, true]) {
-  for (let line = -288; line <= size + 288; line += 24) {
+  for (let line = -200; line <= size + 200; line += 26) {
     const points = [];
-    for (let t = -288; t <= size + 288; t += 6) {
+    for (let t = -200; t <= size + 200; t += 8) {
       const [x, y] = warp(vertical ? line : t, vertical ? t : line);
       points.push(`${points.length ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`);
     }

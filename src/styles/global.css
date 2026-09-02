@@ -528,6 +528,27 @@ svg {
   gap: var(--space-lg);
 }
 
+.hero__scribe {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  height: 100%;
+  padding-right: clamp(0.5rem, 1.5vw, 1rem);
+  display: grid;
+  align-items: center;
+  writing-mode: vertical-rl;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(0.72rem, 0.9vw, 0.9rem);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--color-aluminum);
+  opacity: 0.72;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
 .hero__meta a {
   display: inline-flex;
   align-items: center;
@@ -1343,6 +1364,7 @@ svg {
 
   html { scroll-behavior: auto; }
   .hero__image { animation: none; }
+  [data-hero-title] { animation: none; }
   .icon-arrow,
   .project__media img,
   .craft-item img { transition: none; }
@@ -1383,4 +1405,23 @@ svg {
 }
 @media (prefers-reduced-motion: reduce) {
   .pswp, .pswp * { transition-duration: 0s !important; animation: none !important; }
+}
+
+[data-hero-title] {
+  animation: hero-title-taut 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: 50% 100%;
+}
+@keyframes hero-title-taut {
+  from { transform: scaleY(0.82); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-hero-title] { animation: none; }
+}
+
+@media (max-width: 68.749rem) {
+  .hero__scribe { display: none; }
+}
+@media (max-width: 47.999rem) {
+  .hero__scribe { display: none; }
 }
