@@ -1,10 +1,14 @@
 ---
 import { Picture } from "astro:assets";
 
-import { heroImage } from "../data/projects";
+import { heroImage, projects } from "../data/projects";
+import PhotoLink from "./PhotoLink.astro";
+const project = projects.find((project) => project.images.some((image) => image.src === heroImage.src))!;
+const index = project.images.findIndex((image) => image.src === heroImage.src);
 ---
 
 <div class="hero__image">
+  <PhotoLink project={project} index={index}>
   <Picture
     src={heroImage.src}
     formats={["avif", "webp"]}
@@ -18,4 +22,5 @@ import { heroImage } from "../data/projects";
     quality={86}
     style={`object-position: ${heroImage.focalPoint ?? "50% 40%"}`}
   />
+  </PhotoLink>
 </div>

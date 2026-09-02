@@ -1,11 +1,13 @@
 ---
 import ArrowIcon from "./ArrowIcon.astro";
-import WarpedGrid from "./WarpedGrid.astro";
+import SurfacePattern from "./SurfacePattern.astro";
+import GrainField from "./GrainField.astro";
 import { site } from "../data/site";
 ---
 
 <section class="closing-chapter contact" id="contacto" aria-labelledby="contact-title" data-chapter="ink">
-  <WarpedGrid variant="contact" tone="on-ink" class="contact__grid" />
+  <GrainField reverse />
+  <SurfacePattern variant="diagonal" />
   <div class="contact__stage page-shell">
     <div class="contact__inner">
       <div class="contact__intro" data-reveal="heading">

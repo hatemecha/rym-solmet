@@ -10,3 +10,4 @@ Thumbs.db
 .impeccable/review/
 .impeccable/mocks/
 .impeccable/config.local.json
+.artifacts/

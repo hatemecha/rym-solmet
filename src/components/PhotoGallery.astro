@@ -1,0 +1,96 @@
+---
+import { projects } from "../data/projects";
+import { getGallery } from "../lib/gallery";
+const galleries = Object.fromEntries(await Promise.all(
+  projects.filter((project) => project.section !== "archive")
+    .map(async (project) => [project.slug, await getGallery(project)]),
+));
+---
+<script is:inline type="application/json" id="photo-galleries" set:html={JSON.stringify(galleries).replace(/</g, "\\u003c")} />
+<script>
+  import type PhotoSwipe from "photoswipe";
+  import type { SlideData } from "photoswipe";
+  import stylesUrl from "photoswipe/style.css?url";
+
+  type Photo = SlideData & { caption: string };
+  const galleries: Record<string, Photo[]> = JSON.parse(document.getElementById("photo-galleries")!.textContent!);
+  let active: PhotoSwipe | undefined;
+  let loading = false;
+  let stylesReady: Promise<void> | undefined;
+  const loadStyles = () => stylesReady ??= new Promise<void>((resolve, reject) => {
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = stylesUrl;
+    stylesheet.onload = () => resolve();
+    stylesheet.onerror = () => reject(new Error("PhotoSwipe CSS unavailable"));
+    document.head.append(stylesheet);
+  });
+  document.addEventListener("click", async (event) => {
+    const link = (event.target as Element).closest<HTMLAnchorElement>("[data-photo-project]");
+    if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const photos = galleries[link.dataset.photoProject!];
+    if (!photos) return;
+    event.preventDefault();
+    if (active || loading) return;
+    loading = true;
+    link.setAttribute("aria-busy", "true");
+    try {
+      const [{ default: PhotoSwipe }] = await Promise.all([
+        import("photoswipe"), loadStyles(),
+      ]);
+      const savedY = window.scrollY;
+      const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const pswp = new PhotoSwipe({
+        dataSource: photos,
+        index: Number(link.dataset.photoIndex),
+        bgOpacity: 1,
+        loop: false,
+        showHideAnimationType: reduced ? "none" : "fade",
+        showAnimationDuration: 180,
+        hideAnimationDuration: 160,
+        returnFocus: false,
+        padding: { top: 64, bottom: 80, left: 16, right: 16 },
+        closeTitle: "Cerrar",
+        zoomTitle: "Ampliar o reducir",
+        arrowPrevTitle: "Foto anterior",
+        arrowNextTitle: "Foto siguiente",
+        errorMsg: "No se pudo cargar la foto.",
+        indexIndicatorSep: " de ",
+      });
+      active = pswp;
+      pswp.on("uiRegister", () => {
+        pswp.ui?.registerElement({
+          name: "caption", order: 9, isButton: false, appendTo: "root",
+          onInit: (element) => {
+            element.setAttribute("aria-live", "polite");
+            pswp.on("change", () => { element.textContent = photos[pswp.currIndex].caption; });
+          },
+        });
+      });
+      const background = [...document.body.children].filter((element): element is HTMLElement =>
+        element instanceof HTMLElement && !["SCRIPT", "STYLE"].includes(element.tagName),
+      );
+      const previousInert = background.map((element) => element.inert);
+      pswp.on("beforeOpen", () => {
+        document.dispatchEvent(new Event("gallery:open"));
+        document.documentElement.classList.add("gallery-open");
+        background.forEach((element) => { element.inert = true; });
+      });
+      pswp.on("destroy", () => {
+        background.forEach((element, index) => { element.inert = previousInert[index]; });
+        document.documentElement.classList.remove("gallery-open");
+        window.scrollTo({ top: savedY, behavior: "instant" });
+        document.dispatchEvent(new Event("gallery:close"));
+        link.focus({ preventScroll: true });
+        active = undefined;
+      });
+      pswp.init();
+    } catch {
+      // Progressive fallback also covers an unavailable lazy JS/CSS chunk.
+      window.location.assign(link.href);
+    } finally {
+      loading = false;
+      link.removeAttribute("aria-busy");
+    }
+  });
+</script>

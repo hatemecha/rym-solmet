@@ -44,6 +44,9 @@ typography:
     logo-width: "clamp(116px, 30vw, 152px)"
     hero: "clamp(44px, 7vw, 92px)"
     hero-mobile: "clamp(43.2px, 12vw, 73.6px)"
+    hero-split: "clamp(40px, 5.4vw, 80px)"
+    hero-tablet: "clamp(44px, 6.25vw, 64px)"
+    section-tablet: "clamp(40px, 6.25vw, 64px)"
     section: "clamp(35.2px, 10.5vw, 72px)"
     section-inverse: "clamp(40px, 12vw, 80px)"
     contact: "clamp(48px, 13vw, 96px)"
@@ -62,6 +65,7 @@ spacing:
   xl: 64px
   section: 120px
   gutter: 24px
+  heading-gallery: "clamp(32px, 5vw, 64px)"
 
 rounded:
   none: 0px
@@ -119,12 +123,12 @@ Las superficies forman una escala neutral propia, inspirada en la disciplina de
 escalas como Radix pero mantenida como tokens locales sin dependencia externa.
 La secuencia de producción es deliberada:
 
-- apertura: `ink` con retícula;
-- trabajos seleccionados: `canvas` con retícula estructural tenue;
+- apertura: `ink` con malla ondulada y grano en el borde superior derecho;
+- trabajos seleccionados: `canvas` con malla ondulada de contraste tenue;
 - qué hacemos: `steel-surface` liso;
 - piezas a medida: `canvas-raised` liso;
-- contacto: `ink` con retícula;
-- footer: `canvas-raised` liso.
+- contacto: `ink` con malla ondulada y grano en los bordes;
+- footer: `ink` liso, en continuidad con contacto.
 
 El sitio usa una única dirección clara: papel cálido, tinta carbón y
 fotografías reales sin filtros. El negro se reserva para bandas de contraste,
@@ -133,7 +137,8 @@ texto y captions, no como modo alternativo ni como fondo dominante.
 No introducir un color de marca fuerte hasta que exista una razón real
 derivada del logo o de la identidad final.
 
-Evitar degradados, efectos metálicos digitales y paletas
+Los degradados se limitan a bordes monocromáticos con grano en apertura
+y contacto. Evitar efectos metálicos digitales y paletas
 "industrial amarillo + negro".
 
 ## Typography
@@ -205,11 +210,25 @@ retícula del portfolio ocupa los vacíos sin convertirse en decoración dominan
 
 Evitar grids de cards repetitivas.
 
+El hero de escritorio separa texto y fotografía en cinco y siete columnas,
+con el gutter estructural entre ambos. En tablet la foto precede a un bloque
+de título y consulta; los titulares se ajustan al ancho disponible.
+
+Las fotos de un mismo proyecto comparten altura en desktop y tablet: el ancho
+de cada una se deriva de su proporción original en `src/data/projects.ts`.
+En mobile se apilan a ancho completo. Los captions pasan a título y material
+en líneas separadas cuando su contenedor mide 384px o menos.
+
+Piezas a medida usa tres columnas de igual ancho en tablet y recupera su
+composición asimétrica desde 1100px. Los encabezados de ambas galerías comparten
+una separación fluida de 32–64px hasta las fotos, menor que el espacio entre
+capítulos; foto y caption siempre forman una sola unidad.
+
 Usar una única fotografía estática en el hero, sin filtros ni rotación. El
 scroll usa Lenis sólo con puntero fino; dispositivos táctiles conservan scroll
 nativo. GSAP /
 ScrollTrigger para acompañar el recorrido: máscaras breves en titulares e
-imágenes, captions apenas posteriores, construcción de líneas y parallax muy
+imágenes, captions negros y opacos sin animación, construcción de líneas y parallax muy
 leve en pocas fotografías estructurales. Nunca debe impedir la navegación,
 forzar la inercia en touch ni aplicarse por igual a toda la página. Todo debe
 respetar la preferencia de movimiento reducido.
@@ -232,27 +251,45 @@ No usar glassmorphism.
 
 ## Texture
 
-Un grain monocromático muy sutil puede aportar materialidad a superficies
-planas sin competir con las fotografías.
+El grano base es sutil. GrainField usa ruido monocromático más notorio sobre
+todo el fondo de apertura y contacto: tile de 200px, contraste de 450 %,
+opacidad de 20 % y mezcla screen. El degradado conserva su atenuación en el
+borde superior derecho de apertura y los bordes de contacto; el ruido tiene
+su propia capa para seguir visible sin extender las manchas grises.
+Capacidades, piezas y footer mantienen superficies lisas de descanso.
+No aplicar grano sobre fotografías, galerías, texto ni captions.
 
-Usarlo con criterio:
+SurfacePattern usa una malla vectorial propia fuertemente deformada, siguiendo
+la referencia visual aportada por el usuario. Tres desplazamientos sinusoidales
+periódicos comprimen y expanden las celdas sin romper sus intersecciones.
+El SVG se genera con scripts/generate-warped-grid.mjs; no requiere JavaScript
+cliente, animación, filtros de desplazamiento ni dependencias.
 
-- sí en `canvas`, `canvas-raised` y bandas `panel` (header, craft, capacidades,
-  contacto y footer);
-- no sobre fotografías, hero, galerías ni captions de proyecto;
-- opacidad baja (3–5 %), tile pequeño y `mix-blend-mode` suave;
-- puede ganar apenas presencia en bandas oscuras para sostener superficies planas.
+La malla cubre el ancho y alto completos de las secciones exteriores, incluso
+más allá de 1440px. El tile empalma sus bordes y conserva su proporción:
 
-El grain nunca debe leerse como textura de acero digital, papel reciclado
-decorativo ni filtro vintage. Debe sentirse como una superficie mate real,
-casi imperceptible de un vistazo.
+- Apertura: tile de 900px, opacidad de 13 %, atenuado hacia la columna de lectura.
+- Portfolio: tile de 1050px, tinta tenue sobre canvas y cabecera más tranquila.
+- Contacto: tile de 800px, opacidad de 13 %, más visible en los márgenes superior e inferior.
+- Móvil: tiles de 620px y 740px para conservar curvas reconocibles.
 
-El sistema gráfico secundario es una retícula estructural regular que en zonas
-puntuales se deforma, curva o abre. Se implementa como composiciones SVG
-diseñadas (`WarpedGrid`) únicamente en apertura, portfolio y contacto. “Qué
-hacemos”, piezas a medida y footer son superficies lisas para que la retícula
-marque capítulos en lugar de convertirse en ruido continuo. Cada variante usa
-deformación visible y hairlines de contraste bajo.
+No hay paneles negros ni bordes punteados alrededor de los textos. La lectura
+se protege bajando el contraste de la trama en áreas amplias, con transiciones
+continuas y sin recortes rectangulares. Los CTAs y captions mantienen su fondo
+opaco; los captions permanecen negros durante las animaciones. Las fotografías
+se muestran limpias sobre la capa decorativa.
+
+Los valores negros con alfa en mask-image representan cobertura, no colores
+visibles ni una ampliación de la paleta. El blanco del SVG se invierte para
+la superficie clara; su opacidad determina el contraste final.
+
+La iteración anterior usó patrones de PatternCraft; su atribución se conserva
+en THIRD_PARTY_NOTICES.md. La malla actual es geometría generada en el proyecto.
+
+El movimiento se configura con `gsap.matchMedia`: desktop conserva máscaras,
+parallax selectivo y Lenis; mobile usa reveals cortos por transform, sin parallax
+continuo. Movimiento reducido devuelve el contenido estático. PhotoSwipe carga
+al abrir una imagen, agrupa por proyecto y conserva scroll y foco al cerrar.
 
 ## Shapes
 
@@ -276,6 +313,11 @@ Usar el asset limpio del logo a la izquierda, sin recortes ni desplazamientos
 CSS. Su tinta negra se conserva sobre superficies claras y puede invertirse a
 blanco únicamente dentro de bandas `ink`, como header y contacto.
 Navegación a la derecha.
+
+El header sigue el capítulo: tinta en apertura/contacto y la superficie clara
+correspondiente en portfolio, capacidades y piezas. Transición de 180ms sin blur.
+En mobile conserva la entrada centrada y, al salir del hero, se compacta a logo
+a la izquierda y Consultar a la derecha.
 
 Sin barras promocionales ni elementos decorativos.
 

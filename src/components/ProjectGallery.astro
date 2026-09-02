@@ -2,6 +2,7 @@
 import { Picture } from "astro:assets";
 
 import { featuredProjects } from "../data/projects";
+import PhotoLink from "./PhotoLink.astro";
 ---
 
 <div class="project-grid">
@@ -16,9 +17,11 @@ import { featuredProjects } from "../data/projects";
       >
         <div
           class:list={["project__media", { "project__media--pair": project.images.length > 1 }]}
+          style={`--project-image-columns: ${project.images.map(({ src }) => `${src.width / src.height}fr`).join(" ")}`}
           data-reveal="image"
         >
-          {project.images.map((image) => (
+          {project.images.map((image, imageIndex) => (
+            <PhotoLink project={project} index={imageIndex}>
             <Picture
               src={image.src}
               formats={["avif", "webp"]}
@@ -31,9 +34,10 @@ import { featuredProjects } from "../data/projects";
               quality={82}
               style={`object-position: ${image.focalPoint ?? "50% 50%"}`}
             />
+            </PhotoLink>
           ))}
         </div>
-        <div class="project__caption" data-reveal="caption" data-reveal-delay="110">
+        <div class="project__caption">
           <h3>{project.title}</h3>
           <p>{project.materials}</p>
         </div>

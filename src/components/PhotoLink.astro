@@ -1,0 +1,11 @@
+---
+import type { Project } from "../data/projects";
+import { getGallery } from "../lib/gallery";
+interface Props { project: Project; index?: number; }
+const { project, index = 0 } = Astro.props;
+const images = await getGallery(project);
+---
+<a class="photo-link" href={images[index].src} data-photo-project={project.slug} data-photo-index={index}
+  aria-label={`Ampliar: ${project.images[index].alt}`}>
+  <slot />
+</a>

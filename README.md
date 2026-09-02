@@ -16,18 +16,18 @@ nvm use
 ## Empezar en otra PC
 
 ```sh
-git clone <url-del-repositorio>
+git clone https://github.com/hatemecha/rym-solmet.git
 cd rym-solmet
-npm install
+npm ci
 npm run dev
 ```
 
-La aplicación queda disponible en `http://localhost:4321`.
+La aplicación queda disponible en `http://localhost:4321/rym-solmet/`.
 
-Si el dev server falla al cargar estilos o fuentes, reinicialo:
+Si el dev server falla al cargar estilos o fuentes, detenelo con `Ctrl+C`
+en su terminal y volvé a iniciarlo:
 
 ```sh
-npx astro dev stop
 npm run dev
 ```
 
@@ -64,20 +64,51 @@ Los proyectos destacados reciben automáticamente uno de ocho slots editoriales 
 - `DESIGN.md`: sistema visual.
 - `AGENTS.md`: entrada rápida para agentes de desarrollo.
 - `.agents/skills/rym-solmet/SKILL.md`: flujo portable para mantener el proyecto en otra PC.
+- `TODO.md`: plan de la próxima sesión, prioridades y criterios de aceptación.
+- `refinement-verification.md`: registro de revisiones realizadas y sus límites.
+
+## Retomar el trabajo
+
+En la misma PC, revisá primero `git status` y abrí `TODO.md`. Si el árbol está
+limpio, podés actualizarlo con `git pull --ff-only`. No descartes cambios locales
+para actualizar. En otra PC, seguí los pasos de clonación e instalación de arriba.
+
+Usá `npm run dev` para trabajar con recarga automática. Para comprobar el build:
+
+```sh
+npm run build
+npm run preview -- --port 4322
+```
+
+La vista de producción estará en `http://localhost:4322/rym-solmet/` si el puerto
+está libre; consultá la URL indicada en la terminal. Preview requiere reconstruir
+el sitio después de editar. Las capturas y logs locales de `.artifacts/` no se
+versionan; se pueden regenerar siguiendo el registro de verificación.
+
+La malla estática se guarda en `src/assets/patterns/warped-mesh.svg`. Si cambiás
+su geometría, regenerala con `node scripts/generate-warped-grid.mjs` e incluí
+tanto el generador como el SVG actualizado en el commit.
 
 ## Subir a GitHub
 
-Desde la carpeta del proyecto, con el repositorio ya creado en GitHub:
+El remoto `origin` apunta a `https://github.com/hatemecha/rym-solmet.git`.
+Desde la rama `main`, revisá y verificá los cambios antes de subirlos:
 
 ```sh
-git add .
-git commit -m "Sitio inicial RYM Solmet"
-git branch -M main
-git remote add origin https://github.com/<usuario>/<repositorio>.git
-git push -u origin main
+git status
+npm run check
+npm run build
+git add -A
+git diff --cached --check
+git diff --cached --stat
+git commit -m "Refina las superficies, galerias y movimiento del sitio"
+git push origin main
 ```
 
-Incluye en el commit las fotos de `src/assets/` y el `package-lock.json`. No subas `node_modules/`, `dist/` ni `.astro/`.
+Incluí las fotos de `src/assets/`, el `package-lock.json` y el plan `TODO.md`.
+No subas `node_modules/`, `dist/`, `.astro/`, `.artifacts/` ni archivos `.env`.
+Adaptá el mensaje del commit a los cambios de cada sesión. Si Git rechaza el push
+por cambios remotos, revisalos e integralos antes de reintentar; no fuerces el push.
 
 ## Publicación
 
@@ -87,3 +118,13 @@ El workflow `.github/workflows/deploy.yml` publica la rama `main` en GitHub Page
 2. En **Build and deployment**, elige **GitHub Actions** como origen.
 
 El workflow calcula automáticamente la URL y el subdirectorio desde el repositorio. Cuando se conecte un dominio propio, cambia `SITE_URL` al dominio y deja `BASE_PATH` vacío; luego configura el DNS en Porkbun y el dominio personalizado en GitHub Pages.
+
+Canonical, Open Graph, Twitter, JSON-LD y sitemap usan `SITE_URL` y `BASE_PATH`.
+El valor por defecto apunta a GitHub Pages (`https://hatemecha.github.io/rym-solmet/`).
+Para el dominio final, configurar `SITE_URL` al dominio confirmado y `BASE_PATH=/`
+en el workflow; no hay dominio propio supuesto en los datos del negocio.
+La portada social se genera a partir de la fotografía real del hero.
+
+Las fotografías enlazan a un JPEG optimizado incluso sin JavaScript. PhotoSwipe y
+sus estilos se cargan al abrir la primera foto; las galerías, captions y variantes
+responsive se derivan exclusivamente de `src/data/projects.ts`.
