@@ -1,15 +1,14 @@
 ---
-import { Picture } from "astro:assets";
 import { craftProjects } from "../data/projects";
 import PhotoLink from "./PhotoLink.astro";
+import ProjectPicture from "./ProjectPicture.astro";
 ---
 <div class="craft-gallery">
   {craftProjects.map((project) => (
     <figure class={`craft-item craft-item--${project.order}`} data-reveal="image">
       <PhotoLink project={project}>
-        <Picture src={project.images[0].src} formats={["avif", "webp"]} fallbackFormat="jpeg"
-          widths={[360, 720, 960]} sizes="(max-width: 767px) calc(100vw - 32px), min(32rem, 40vw)"
-          alt={project.images[0].alt} loading="lazy" decoding="async" quality={82} />
+        <ProjectPicture image={project.images[0]} widths={[360, 720, 960]}
+          sizes="(max-width: 767px) calc(100vw - 32px), min(32rem, 40vw)" />
       </PhotoLink>
       <figcaption><span>{project.title}</span><span>{project.materials}</span></figcaption>
     </figure>

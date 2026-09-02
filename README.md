@@ -52,7 +52,7 @@ Las fotografías originales viven en `src/assets/projects/<proyecto>/`. Los tít
 
 Cada proyecto usa un slug descriptivo y fotografías numeradas como `01.jpeg`, `02.jpeg`, etc. Las imágenes se conservan en su resolución original; Astro produce las variantes optimizadas durante el build.
 
-El logo original vive en `src/assets/brand/logosolmet.png`; la interfaz usa el derivado limpio `src/assets/brand/logosolmet-clean.png`. El sitio mantiene una única dirección clara y sus tokens y reglas están documentados en `DESIGN.md`.
+El logo original vive en `src/assets/brand/logosolmet.png`; la interfaz usa el derivado limpio `src/assets/brand/logosolmet-clean.png`. El sitio mantiene una única dirección clara: criterio visual en `DESIGN.md`, valores concretos en `docs/implementation.md`.
 
 Tipografías de interfaz: Oxanium en titulares y Archivo en cuerpo, navegación, etiquetas y CTAs. Se cargan desde `src/styles/*.css`.
 
@@ -61,7 +61,8 @@ Los proyectos destacados reciben automáticamente uno de ocho slots editoriales 
 ## Contexto del proyecto
 
 - `PRODUCT.md`: hechos, público, alcance y restricciones.
-- `DESIGN.md`: sistema visual.
+- `DESIGN.md`: dirección visual y criterio de marca.
+- `docs/implementation.md`: tokens, medidas y comportamiento de componentes.
 - `AGENTS.md`: entrada rápida para agentes de desarrollo.
 - `.agents/skills/rym-solmet/SKILL.md`: flujo portable para mantener el proyecto en otra PC.
 - `TODO.md`: plan de la próxima sesión, prioridades y criterios de aceptación.

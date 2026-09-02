@@ -1,0 +1,40 @@
+---
+import sharp from "sharp";
+import { Picture } from "astro:assets";
+
+import type { ProjectImage } from "../data/projects";
+
+interface Props {
+  image: ProjectImage;
+  widths: number[];
+  sizes: string;
+}
+
+const { image, widths, sizes } = Astro.props;
+const focalPoint = image.focalPoint ?? "50% 50%";
+// The preview is embedded in the HTML: a lazy image must never add a second
+// request that competes with the hero or other gallery images on 4G.
+const sourcePath = (image.src as unknown as { fsPath: string }).fsPath;
+const placeholderBuffer = await sharp(sourcePath)
+  .resize({ width: 32, withoutEnlargement: true })
+  .webp({ quality: 20 })
+  .toBuffer();
+const placeholder = `data:image/webp;base64,${placeholderBuffer.toString("base64")}`;
+---
+
+<Picture
+  src={image.src}
+  formats={["avif", "webp"]}
+  fallbackFormat="jpeg"
+  {widths}
+  {sizes}
+  alt={image.alt}
+  loading="lazy"
+  decoding="async"
+  quality={82}
+  style={`object-position: ${focalPoint}`}
+  pictureAttributes={{
+    class: "blur-photo",
+    style: `--placeholder-image: url(${placeholder}); --placeholder-position: ${focalPoint}`,
+  }}
+/>

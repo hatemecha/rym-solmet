@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "latest",
+    "tweakpane": "^4.0.5",
     "typescript": "latest"
   }
 }

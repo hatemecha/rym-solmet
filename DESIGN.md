@@ -105,6 +105,77 @@ El metal es el núcleo de la identidad, no una restricción del catálogo.
 Trabajos combinados con madera u otros materiales siguen perteneciendo
 a RYM cuando forman parte de una solución fabricada a medida.
 
+La consistencia debe surgir del lenguaje compartido, no de repetir componentes.
+
+## Visual Resources
+
+### Prefer
+
+Recursos naturalmente compatibles con RYM:
+
+- fotografía real;
+- composiciones asimétricas;
+- líneas y estructuras;
+- warped grids;
+- tipografía fuerte;
+- superficies neutras;
+- contrastes ink/canvas;
+- motion ligado al scroll;
+- textura;
+- escalas amplias;
+- interacción discreta.
+
+### Explore freely
+
+Recursos permitidos cuando exista una idea detrás:
+
+- gradients;
+- sombras;
+- transparencias;
+- blend modes;
+- masks;
+- sticky/pinning;
+- parallax;
+- type animation;
+- cursor interactions;
+- composiciones full-bleed;
+- deformaciones;
+- filtros SVG;
+- canvas;
+- patrones generativos;
+- inversión de color;
+- overlays.
+
+### Avoid by default
+
+No porque estén "prohibidos", sino porque normalmente conducen a un resultado
+genérico:
+
+- iconos ilustrativos para explicar servicios obvios;
+- cards SaaS repetidas;
+- estadísticas inventadas;
+- stock photography;
+- clichés de herrería;
+- efectos sin relación con el contenido;
+- animación repetida idénticamente en cada sección;
+- decoración usada solo porque había espacio vacío.
+
+## Experimental Freedom
+
+RYM debe conservar una identidad reconocible, pero el sistema no debe impedir
+la experimentación visual.
+
+Una solución nueva puede apartarse de componentes, proporciones, motion o
+tratamientos existentes cuando:
+
+1. utiliza contenido real;
+2. mantiene legibilidad y accesibilidad;
+3. mejora la composición o el recorrido;
+4. puede explicarse mediante un criterio visual concreto;
+5. no convierte al sitio en una colección de tendencias inconexas.
+
+No es necesario que cada página o sección use exactamente los mismos recursos.
+
 ## Colors
 
 La interfaz es esencialmente monocromática.
@@ -137,15 +208,17 @@ texto y captions, no como modo alternativo ni como fondo dominante.
 No introducir un color de marca fuerte hasta que exista una razón real
 derivada del logo o de la identidad final.
 
-Los degradados se limitan a bordes monocromáticos con grano en apertura
-y contacto. Evitar efectos metálicos digitales y paletas
-"industrial amarillo + negro".
+Los gradientes no constituyen por sí mismos un elemento de marca. Pueden
+utilizarse como iluminación, máscara, transición o profundidad cuando
+permanezcan dentro de la paleta y no dominen la composición.
+
+Evitar efectos metálicos digitales y paletas "industrial amarillo + negro".
 
 ## Typography
 
 El sistema tipográfico proviene del logo en `src/assets/brand/logosolmet-clean.png`:
 
-- **Oxanium** — titulares (`h1`, `h2`) y cualquier display grande. Es la voz de “RYM”.
+- **Oxanium** — titulares (`h1`, `h2`) y cualquier display grande. Es la voz de "RYM".
 - **Archivo** — cuerpo, navegación, etiquetas, CTAs, captions y metadata. Aporta una lectura más sobria y editorial.
 
 Oxanium solo en titulares. Archivo cubre el resto del sistema; las etiquetas
@@ -161,14 +234,8 @@ BAHÍA BLANCA — 2026
 
 El cuerpo siempre prioriza claridad.
 
-La implementación de producción usa una escala fluida documentada en
-`production-responsive`. Los extremos no son tamaños nuevos elegidos por
-componente: son límites responsivos compartidos para conservar la jerarquía
-entre 320px y 1440px. `ink-muted` se reserva para cuerpo secundario sobre
-`canvas`; es más oscuro que `steel` para sostener contraste AA en texto pequeño.
-
-Las fuentes se cargan en subconjunto `latin` + `latin-ext` desde
-`src/styles/archivo-latin.css` y `src/styles/oxanium-latin.css`.
+La escala responsiva de producción y los extremos fluidos entre 320px y 1440px
+están documentados en `docs/implementation.md`.
 
 No agregar tipografías decorativas fuera del par Oxanium + Archivo.
 No usar stencil ni estética mecánica literal.
@@ -208,106 +275,53 @@ general del sitio. El espacio negativo debe ser intencional: en pares de alturas
 desiguales, la pieza corta se alinea para sostener el ritmo de la fila y la
 retícula del portfolio ocupa los vacíos sin convertirse en decoración dominante.
 
-Evitar grids de cards repetitivas.
+El hero de escritorio separa texto y fotografía; en tablet la foto precede al
+bloque de título y consulta. Los titulares se ajustan al ancho disponible.
 
-El hero de escritorio separa texto y fotografía en cinco y siete columnas,
-con el gutter estructural entre ambos. En tablet la foto precede a un bloque
-de título y consulta; los titulares se ajustan al ancho disponible.
+Foto y caption siempre forman una sola unidad.
 
-Las fotos de un mismo proyecto comparten altura en desktop y tablet: el ancho
-de cada una se deriva de su proporción original en `src/data/projects.ts`.
-En mobile se apilan a ancho completo. Los captions pasan a título y material
-en líneas separadas cuando su contenedor mide 384px o menos.
+Usar una única fotografía estática en el hero, sin filtros ni rotación.
 
-Piezas a medida usa tres columnas de igual ancho en tablet y recupera su
-composición asimétrica desde 1100px. Los encabezados de ambas galerías comparten
-una separación fluida de 32–64px hasta las fotos, menor que el espacio entre
-capítulos; foto y caption siempre forman una sola unidad.
-
-Usar una única fotografía estática en el hero, sin filtros ni rotación. El
-scroll usa Lenis sólo con puntero fino; dispositivos táctiles conservan scroll
-nativo. GSAP /
-ScrollTrigger para acompañar el recorrido: máscaras breves en titulares e
-imágenes, captions negros y opacos sin animación, construcción de líneas y parallax muy
-leve en pocas fotografías estructurales. Nunca debe impedir la navegación,
-forzar la inercia en touch ni aplicarse por igual a toda la página. Todo debe
-respetar la preferencia de movimiento reducido.
+El motion acompaña el recorrido sin impedir la navegación ni forzar inercia en
+touch. Debe respetar la preferencia de movimiento reducido. Los detalles de
+implementación viven en `docs/implementation.md`.
 
 ## Elevation & Depth
 
-El diseño es plano.
+La profundidad debe ser deliberada.
 
-La jerarquía se construye con:
+Por defecto, la jerarquía surge de escala, espacio, fotografía, contraste y
+líneas. Sombras, transparencias, perspectiva o capas pueden utilizarse cuando
+refuercen una composición concreta.
 
-- escala;
-- espacio;
-- contraste;
-- fotografía;
-- líneas divisorias.
-
-No usar sombras salvo que una interacción funcional lo requiera.
-
-No usar glassmorphism.
+Las transparencias pueden utilizarse como capas espaciales. Evitar convertirlas
+en un sistema de cards decorativas.
 
 ## Texture
 
-El grano base es sutil. GrainField usa ruido monocromático más notorio sobre
-todo el fondo de apertura y contacto: tile de 200px, contraste de 450 %,
-opacidad de 48 % y mezcla overlay. Overlay conserva el valor medio de `ink` en
-lugar de aclararlo como screen. El degradado conserva su atenuación en el borde
-superior derecho de apertura y los bordes de contacto con 24 % de opacidad y
-mezcla soft-light; el ruido tiene su propia capa para seguir visible sin
-extender manchas grises. No se superponen otras capas de ruido en esas bandas.
-Capacidades, piezas y footer mantienen superficies lisas de descanso.
-No aplicar grano sobre fotografías, galerías, texto ni captions.
+El grano base es sutil. GrainField puede ser más visible en capítulos oscuros
+y desaparecer completamente en superficies de descanso. No aplicar grano sobre
+fotografías, galerías, texto ni captions.
 
-SurfacePattern usa una malla vectorial propia fuertemente deformada, siguiendo
-la referencia visual aportada por el usuario. Tres desplazamientos sinusoidales
-periódicos comprimen y expanden las celdas sin romper sus intersecciones.
-El SVG se genera con scripts/generate-warped-grid.mjs; no requiere JavaScript
-cliente, animación, filtros de desplazamiento ni dependencias.
+SurfacePattern usa una malla vectorial propia fuertemente deformada. El SVG se
+genera en el proyecto; no requiere dependencias externas ni animación por
+defecto. La malla cubre secciones exteriores y se atenúa hacia las áreas de
+lectura para proteger el contraste sin recortes rectangulares.
 
-La malla cubre el ancho y alto completos de las secciones exteriores, incluso
-más allá de 1440px. El tile empalma sus bordes y conserva su proporción:
+Los CTAs y captions mantienen fondo opaco. Las fotografías se muestran limpias
+sobre la capa decorativa.
 
-- Apertura: tile de 900px, opacidad de 13 %, atenuado hacia la columna de lectura.
-- Portfolio: tile de 1050px, tinta tenue sobre canvas y cabecera más tranquila.
-- Contacto: tile de 800px, opacidad de 13 %, más visible en los márgenes superior e inferior.
-- Móvil: tiles de 620px y 740px para conservar curvas reconocibles.
-
-No hay paneles negros ni bordes punteados alrededor de los textos. La lectura
-se protege bajando el contraste de la trama en áreas amplias, con transiciones
-continuas y sin recortes rectangulares. Los CTAs y captions mantienen su fondo
-opaco; los captions permanecen negros durante las animaciones. Las fotografías
-se muestran limpias sobre la capa decorativa.
-
-Los valores negros con alfa en mask-image representan cobertura, no colores
-visibles ni una ampliación de la paleta. El blanco del SVG se invierte para
-la superficie clara; su opacidad determina el contraste final.
-
-La iteración anterior usó patrones de PatternCraft; su atribución se conserva
-en THIRD_PARTY_NOTICES.md. La malla actual es geometría generada en el proyecto.
-
-El movimiento se configura con `gsap.matchMedia`: desktop conserva máscaras,
-parallax selectivo y Lenis; mobile usa reveals cortos por transform, sin parallax
-continuo. La única malla móvil es la de contacto en desktop con puntero fino:
-su tile interior recorre 8px × −6px con ida y vuelta en 26 segundos, mientras
-la máscara exterior permanece fija. Tiene 12px de sobrecobertura, se pausa fuera
-de pantalla o con la pestaña oculta y no mueve el ruido. Mobile y movimiento
-reducido conservan la malla estática. PhotoSwipe carga al abrir una imagen,
-agrupa por proyecto y conserva scroll y foco al cerrar.
+Valores concretos de tiles, opacidades, blend modes y motion de la malla:
+`docs/implementation.md`.
 
 ## Shapes
 
 La geometría debe ser recta y estructural.
 
-- imágenes: 0px radius;
-- bloques: 0px radius;
-- botones: 0–2px;
-- líneas: 1px.
-
 Los componentes deben recordar indirectamente la precisión de perfiles,
 chapas y estructuras, sin imitarlos literalmente.
+
+Radios y medidas de línea: `docs/implementation.md`.
 
 ## Components
 
@@ -321,9 +335,7 @@ blanco únicamente dentro de bandas `ink`, como header y contacto.
 Navegación a la derecha.
 
 El header sigue el capítulo: tinta en apertura/contacto y la superficie clara
-correspondiente en portfolio, capacidades y piezas. Transición de 180ms sin blur.
-En mobile conserva la entrada centrada y, al salir del hero, se compacta a logo
-a la izquierda y Consultar a la derecha.
+correspondiente en portfolio, capacidades y piezas.
 
 Sin barras promocionales ni elementos decorativos.
 
@@ -341,8 +353,8 @@ Una entrada de proyecto contiene únicamente lo necesario:
 La fotografía domina sobre el texto.
 
 La composición no depende de selectores por índice absoluto. Usa slots
-repetibles (`project--slot-1` a `project--slot-8`) derivados del orden de
-`src/data/projects.ts`, de modo que sumar proyectos preserve el ritmo responsive.
+repetibles derivados del orden de `src/data/projects.ts`, de modo que sumar
+proyectos preserve el ritmo responsive.
 
 ### Buttons
 
@@ -352,8 +364,6 @@ Ver proyecto →
 Contacto →
 
 Los CTA principales pueden usar fondo `ink` y texto `white`.
-
-Sin gradientes, sombras ni botones tipo píldora.
 
 ### Photography
 
@@ -372,23 +382,3 @@ No aplicar filtros que pretendan hacerlas "cinematográficas".
 
 Las fotografías imperfectas pueden utilizarse cuando documenten bien
 un trabajo, pero no todas deben tener protagonismo equivalente.
-
-## Do's and Don'ts
-
-Do:
-- dejar que las fotografías construyan la identidad;
-- usar mucho espacio negativo;
-- mostrar escala y estructura;
-- escribir descripciones concretas;
-- usar composiciones editoriales;
-- mantener una jerarquía visual fuerte y sencilla.
-
-Don't:
-- usar fotografías de stock;
-- decorar con chispas, engranajes o texturas de acero;
-- llenar cada sección con cards;
-- utilizar slogans genéricos;
-- inventar cifras, clientes o capacidades;
-- abusar de negro como fondo por ser una empresa metalúrgica;
-- introducir elementos visuales sin una función;
-- convertir el sitio en una plantilla SaaS.

@@ -1,146 +1,138 @@
 <script>
-  import "lenis/dist/lenis.css";
-  import Lenis from "lenis";
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-  gsap.registerPlugin(ScrollTrigger);
-  const header = document.querySelector<HTMLElement>("[data-site-header]")!;
-  const opening = document.querySelector<HTMLElement>(".opening-chapter")!;
+  const header = document.querySelector<HTMLElement>("[data-site-header]");
+  const opening = document.querySelector<HTMLElement>(".opening-chapter");
   const chapters = [...document.querySelectorAll<HTMLElement>("[data-chapter]")];
-  const headerHeight = () => header.getBoundingClientRect().height;
-  // Lenis 1.3 reads scroll-padding itself. Only compensate the difference
-  // between the native CSS offset and the measured fixed header.
-  const anchorOffset = () => parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) - headerHeight() - 8;
 
-  // Functional state is independent of the visitor's motion preference.
-  const updateHeader = () => {
-    const edge = headerHeight();
-    const chapter = chapters.find((section) => {
-      const rect = section.getBoundingClientRect();
-      return rect.top <= edge && rect.bottom > edge;
-    });
-    header.dataset.surface = chapter?.dataset.chapter ?? "ink";
-    header.classList.toggle("is-compact", opening.getBoundingClientRect().bottom <= edge);
-  };
-  ScrollTrigger.create({ start: 0, end: "max", onUpdate: updateHeader, onRefresh: updateHeader });
-  updateHeader();
-
-  const media = gsap.matchMedia();
-  media.add({
-    desktop: "(min-width: 768px) and (hover: hover) and (pointer: fine)",
-    reduced: "(prefers-reduced-motion: reduce)",
-    all: "all",
-  }, (context) => {
-    const { desktop, reduced } = context.conditions!;
-    let lenis: Lenis | undefined;
-    let cleanupPatternMotion = () => {};
-    const tick = (time: number) => lenis?.raf(time * 1000);
-    const pause = () => lenis?.stop();
-    const resume = () => { lenis?.start(); lenis?.resize(); };
-    const resize = new ResizeObserver(() => {
-      if (lenis) lenis.options.anchors = { offset: anchorOffset() };
-    });
-    if (desktop && !reduced) {
-      lenis = new Lenis({
-        duration: 1.05,
-        smoothWheel: true,
-        syncTouch: false,
-        anchors: { offset: anchorOffset() },
-        stopInertiaOnNavigate: true,
-        prevent: (node) => node.classList.contains("pswp"),
+  if (header && opening) {
+    const headerHeight = () => header.getBoundingClientRect().height;
+    let scheduled = false;
+    const updateHeader = () => {
+      const edge = headerHeight();
+      const chapter = chapters.find((section) => {
+        const rect = section.getBoundingClientRect();
+        return rect.top <= edge && rect.bottom > edge;
       });
-      lenis.on("scroll", ScrollTrigger.update);
-      gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
-      resize.observe(header);
-      if (document.documentElement.classList.contains("gallery-open")) lenis.stop();
-    }
+      header.dataset.surface = chapter?.dataset.chapter ?? "ink";
+      header.classList.toggle("is-compact", opening.getBoundingClientRect().bottom <= edge);
+      scheduled = false;
+    };
+    const scheduleHeader = () => {
+      if (!scheduled) {
+        scheduled = true;
+        requestAnimationFrame(updateHeader);
+      }
+    };
+    window.addEventListener("scroll", scheduleHeader, { passive: true });
+    window.addEventListener("resize", scheduleHeader, { passive: true });
+    window.addEventListener("pageshow", scheduleHeader);
+    updateHeader();
+  }
+
+  const desktop = window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine)");
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (desktop.matches && !reduced.matches && header) {
+    const [{ gsap }, { ScrollTrigger }, { default: Lenis }] = await Promise.all([
+      import("gsap"),
+      import("gsap/ScrollTrigger"),
+      import("lenis"),
+      import("lenis/dist/lenis.css"),
+    ]);
+
+    gsap.registerPlugin(ScrollTrigger);
+    const anchorOffset = () => parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)
+      - header.getBoundingClientRect().height - 8;
+    const lenis = new Lenis({
+      duration: 1.05,
+      smoothWheel: true,
+      syncTouch: false,
+      anchors: { offset: anchorOffset() },
+      stopInertiaOnNavigate: true,
+      prevent: (node) => node.classList.contains("pswp"),
+    });
+    const tick = (time: number) => lenis.raf(time * 1000);
+    const pause = () => lenis.stop();
+    const resume = () => { lenis.start(); lenis.resize(); };
+    const resize = new ResizeObserver(() => { lenis.options.anchors = { offset: anchorOffset() }; });
+    lenis.on("scroll", ScrollTrigger.update);
+    gsap.ticker.add(tick);
+    gsap.ticker.lagSmoothing(0);
+    resize.observe(header);
     document.addEventListener("gallery:open", pause);
     document.addEventListener("gallery:close", resume);
 
-    if (!reduced) {
-      const reveal = (target: Element, from: gsap.TweenVars, to: gsap.TweenVars) => {
-        gsap.fromTo(target, from, {
-          ...to,
-          duration: desktop ? 0.65 : 0.45,
-          ease: desktop ? "none" : "power2.out",
-          scrollTrigger: {
-            trigger: target, start: "top 92%", end: "top 60%",
-            ...(desktop ? { scrub: 0.45 } : { once: true }),
-          },
-        });
-      };
-      document.querySelectorAll('[data-reveal="heading"]').forEach((heading) => {
-        const title = heading.querySelector("h2");
-        const supporting = heading.querySelector("p");
-        if (title) reveal(title, desktop ? { clipPath: "inset(0 0 100% 0)", y: 20 } : { y: 12 },
-          desktop ? { clipPath: "inset(0)", y: 0 } : { y: 0 });
-        if (supporting) reveal(supporting, { opacity: 0.35, y: desktop ? 12 : 8 }, { opacity: 1, y: 0 });
-        if (desktop) reveal(heading, { "--line-scale": 0 }, { "--line-scale": 1 });
+    const reveal = (target: Element, from: gsap.TweenVars, to: gsap.TweenVars) => {
+      gsap.fromTo(target, from, {
+        ...to,
+        duration: 0.65,
+        ease: "none",
+        scrollTrigger: { trigger: target, start: "top 92%", end: "top 60%", scrub: 0.45 },
       });
-      document.querySelectorAll('[data-reveal="image"]').forEach((image) => {
-        reveal(image, desktop ? { clipPath: "inset(0 0 12% 0)", y: 28 } : { y: 12 },
-          desktop ? { clipPath: "inset(0)", y: 0 } : { y: 0 });
-      });
-      const list = document.querySelector(".capabilities__list");
-      if (list) reveal(list, { x: desktop ? -18 : -8, opacity: 0.35 }, { x: 0, opacity: 1 });
-      if (desktop) {
-        const contactPattern = document.querySelector<HTMLElement>(
-          '[data-surface-pattern="diagonal"] .surface-pattern__field',
-        );
-        if (contactPattern) {
-          const patternMotion = gsap.to(contactPattern, {
-            x: 8,
-            y: -6,
-            duration: 13,
-            ease: "sine.inOut",
-            repeat: -1,
-            yoyo: true,
-            paused: true,
-          });
-          let patternTrigger: ScrollTrigger | undefined;
-          patternTrigger = ScrollTrigger.create({
-            trigger: ".closing-chapter",
-            start: "top bottom",
-            end: "bottom top",
-            onToggle: syncPatternMotion,
-          });
-          function syncPatternMotion() {
-            const shouldRun = patternTrigger?.isActive === true && document.visibilityState === "visible";
-            contactPattern!.style.willChange = shouldRun ? "transform" : "auto";
-            if (shouldRun) patternMotion.play();
-            else patternMotion.pause();
-          }
-          document.addEventListener("visibilitychange", syncPatternMotion);
-          syncPatternMotion();
-          cleanupPatternMotion = () => {
-            document.removeEventListener("visibilitychange", syncPatternMotion);
-            patternTrigger?.kill();
-            patternMotion.kill();
-            gsap.set(contactPattern, { clearProps: "transform,willChange" });
-          };
-        }
-        gsap.to(".hero__image", {
-          yPercent: 4, scale: 1.025, ease: "none",
-          scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.65 },
-        });
-        document.querySelectorAll(".project--slot-3 .project__media img, .project--slot-5 .project__media img")
-          .forEach((image) => gsap.to(image, {
-            yPercent: -3, scale: 1.025, ease: "none",
-            scrollTrigger: { trigger: image.closest(".project"), start: "top bottom", end: "bottom top", scrub: 0.75 },
-          }));
-      }
-    }
-    return () => {
-      cleanupPatternMotion();
-      resize.disconnect();
-      document.removeEventListener("gallery:open", pause);
-      document.removeEventListener("gallery:close", resume);
-      gsap.ticker.remove(tick);
-      lenis?.destroy();
     };
-  });
-  document.fonts.ready.then(() => ScrollTrigger.refresh());
-  window.addEventListener("pageshow", () => { ScrollTrigger.refresh(); updateHeader(); });
+
+    document.querySelectorAll('[data-reveal="heading"]').forEach((heading) => {
+      const title = heading.querySelector("h2");
+      const supporting = heading.querySelector("p");
+      if (title) reveal(title, { clipPath: "inset(0 0 100% 0)", y: 20 }, { clipPath: "inset(0)", y: 0 });
+      if (supporting) reveal(supporting, { opacity: 0.35, y: 12 }, { opacity: 1, y: 0 });
+      reveal(heading, { "--line-scale": 0 }, { "--line-scale": 1 });
+    });
+    document.querySelectorAll('[data-reveal="image"]').forEach((image) => {
+      const isStructuralMask = image.matches(".project--slot-3 .project__media");
+      reveal(image, {
+        clipPath: isStructuralMask ? "polygon(0 0, 100% 0, 100% 100%, 0 82%)" : "inset(0 0 12% 0)",
+        y: 28,
+      }, {
+        clipPath: isStructuralMask ? "polygon(0 0, 100% 0, 100% 100%, 0 100%)" : "inset(0)",
+        y: 0,
+      });
+    });
+    document.querySelectorAll<HTMLElement>('[data-reveal="divider"]').forEach((divider) => {
+      gsap.set(divider, { "--divider-scale": 0 });
+      reveal(divider, { "--divider-scale": 0 }, { "--divider-scale": 1 });
+    });
+    const list = document.querySelector(".capabilities__list");
+    if (list) reveal(list, { x: -18, opacity: 0.35 }, { x: 0, opacity: 1 });
+
+    const contactPattern = document.querySelector<HTMLElement>('[data-surface-pattern="diagonal"] .surface-pattern__field');
+    let patternTrigger: ScrollTrigger | undefined;
+    let patternMotion: gsap.core.Tween | undefined;
+    if (contactPattern) {
+      patternMotion = gsap.to(contactPattern, { x: 8, y: -6, duration: 13, ease: "sine.inOut", repeat: -1, yoyo: true, paused: true });
+      const syncPatternMotion = () => {
+        const shouldRun = patternTrigger?.isActive === true && document.visibilityState === "visible";
+        contactPattern.style.willChange = shouldRun ? "transform" : "auto";
+        if (shouldRun) patternMotion?.play(); else patternMotion?.pause();
+      };
+      patternTrigger = ScrollTrigger.create({ trigger: ".closing-chapter", start: "top bottom", end: "bottom top", onToggle: syncPatternMotion });
+      document.addEventListener("visibilitychange", syncPatternMotion);
+      syncPatternMotion();
+    }
+
+    gsap.to(".hero__image", { yPercent: 4, scale: 1.025, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.65 } });
+    document.querySelectorAll(".project--slot-3 .project__media img, .project--slot-5 .project__media img")
+      .forEach((image) => gsap.to(image, { yPercent: -3, scale: 1.025, ease: "none", scrollTrigger: { trigger: image.closest(".project"), start: "top bottom", end: "bottom top", scrub: 0.75 } }));
+
+    const openingPattern = document.querySelector<HTMLElement>('[data-surface-pattern="grid"] .surface-pattern__field');
+    const hero = document.querySelector<HTMLElement>(".hero");
+    if (openingPattern && hero) {
+      const gridMotion = { horizontal: 7, vertical: 5, returnDuration: 0.7 };
+      if (import.meta.env.DEV) {
+        const { Pane } = await import("tweakpane");
+        const pane = new Pane({ title: "Malla del hero" }) as unknown as {
+          addBinding: (target: object, key: string, options: object) => void;
+        };
+        pane.addBinding(gridMotion, "horizontal", { min: 0, max: 18, step: 0.5, label: "tensión X" });
+        pane.addBinding(gridMotion, "vertical", { min: 0, max: 14, step: 0.5, label: "tensión Y" });
+        pane.addBinding(gridMotion, "returnDuration", { min: 0.2, max: 2, step: 0.1, label: "retorno" });
+      }
+      const moveGrid = (event: PointerEvent) => {
+        const bounds = hero.getBoundingClientRect();
+        gsap.to(openingPattern, { x: ((event.clientX - bounds.left) / bounds.width - 0.5) * gridMotion.horizontal, y: ((event.clientY - bounds.top) / bounds.height - 0.5) * gridMotion.vertical, duration: 0.8, ease: "power2.out", overwrite: true });
+      };
+      hero.addEventListener("pointermove", moveGrid);
+      hero.addEventListener("pointerleave", () => gsap.to(openingPattern, { x: 0, y: 0, duration: gridMotion.returnDuration, ease: "power2.out", overwrite: true }));
+    }
+    document.fonts.ready.then(() => ScrollTrigger.refresh());
+  }
 </script>

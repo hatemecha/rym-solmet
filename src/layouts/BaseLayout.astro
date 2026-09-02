@@ -2,6 +2,7 @@
 import "../styles/global.css";
 
 import MotionController from "../components/MotionController.astro";
+import MobileWhatsApp from "../components/MobileWhatsApp.astro";
 import PhotoGallery from "../components/PhotoGallery.astro";
 import { getImage } from "astro:assets";
 import { heroImage } from "../data/projects";
@@ -19,6 +20,14 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 const canonical = new URL(Astro.url.pathname, Astro.site!);
 const socialPhoto = await getImage({ src: heroImage.src, width: 1200, height: 630, fit: "cover", format: "jpeg", quality: 85 });
 const socialImage = new URL(socialPhoto.src, Astro.site!);
+const heroPreloadImages = await Promise.all(
+  [480, 800, 1200].map((width) =>
+    getImage({ src: heroImage.src, width, format: "avif", quality: 86 }),
+  ),
+);
+const heroPreloadSrcset = heroPreloadImages
+  .map((image, index) => `${image.src} ${[480, 800, 1200][index]}w`)
+  .join(", ");
 const business = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -57,6 +66,15 @@ const business = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     <meta name="twitter:image:alt" content={heroImage.alt} />
+    <link
+      rel="preload"
+      as="image"
+      href={heroPreloadImages[2].src}
+      imagesrcset={heroPreloadSrcset}
+      imagesizes="(min-width: 1100px) 66vw, 100vw"
+      type="image/avif"
+      fetchpriority="high"
+    />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(business).replace(/</g, "\\u003c")} />
     <link rel="sitemap" href={`${base}sitemap-index.xml`} />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
@@ -65,6 +83,7 @@ const business = {
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
     <slot />
+    <MobileWhatsApp />
     <MotionController />
     <PhotoGallery />
   </body>
