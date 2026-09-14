@@ -280,7 +280,7 @@ bloque de título y consulta. Los titulares se ajustan al ancho disponible.
 
 Foto y caption siempre forman una sola unidad.
 
-Usar una única fotografía estática en el hero, sin filtros ni rotación.
+El hero presenta una selección de fotografías reales con fundido suave, sin filtros. Incluye navegación y pausa; la rotación se detiene fuera de pantalla, durante la interacción y con movimiento reducido.
 
 El motion acompaña el recorrido sin impedir la navegación ni forzar inercia en
 touch. Debe respetar la preferencia de movimiento reducido. Los detalles de

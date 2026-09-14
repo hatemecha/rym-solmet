@@ -8,12 +8,18 @@
     let scheduled = false;
     const updateHeader = () => {
       const edge = headerHeight();
-      const chapter = chapters.find((section) => {
+      const previous = chapters.find((section) => section.dataset.chapter === header.dataset.surface && (() => {
+        const rect = section.getBoundingClientRect();
+        return rect.top <= edge + 16 && rect.bottom > edge - 16;
+      })());
+      const chapter = previous ?? chapters.find((section) => {
         const rect = section.getBoundingClientRect();
         return rect.top <= edge && rect.bottom > edge;
       });
       header.dataset.surface = chapter?.dataset.chapter ?? "ink";
-      header.classList.toggle("is-compact", opening.getBoundingClientRect().bottom <= edge);
+      const boundary = opening.getBoundingClientRect().bottom;
+      const compact = header.classList.contains("is-compact");
+      header.classList.toggle("is-compact", compact ? boundary <= edge + 32 : boundary <= edge - 16);
       scheduled = false;
     };
     const scheduleHeader = () => {
@@ -30,6 +36,27 @@
 
   const desktop = window.matchMedia("(min-width: 768px) and (hover: hover) and (pointer: fine)");
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // A short entrance plays once; reading never depends on continuing to scroll.
+  const entrances = new Set<Animation>();
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      observer.unobserve(entry.target);
+      if (reduced.matches || entry.boundingClientRect.top < 0) continue;
+      const animation = entry.target.animate([
+        { transform: "translateY(10px)", opacity: 0.82 },
+        { transform: "translateY(0)", opacity: 1 },
+      ], { duration: 700, easing: "cubic-bezier(0.22, 0.61, 0.36, 1)" });
+      entrances.add(animation);
+      animation.finished.then(() => entrances.delete(animation)).catch(() => entrances.delete(animation));
+    }
+  }, { threshold: 0.08 });
+  document.querySelectorAll('[data-reveal="heading"], [data-reveal="image"], .capabilities__list')
+    .forEach((element) => observer.observe(element));
+  reduced.addEventListener("change", () => {
+    if (reduced.matches) entrances.forEach((animation) => animation.cancel());
+  });
 
   if (desktop.matches && !reduced.matches && header) {
     const [{ gsap }, { ScrollTrigger }, { default: Lenis }] = await Promise.all([
@@ -63,39 +90,6 @@
     document.addEventListener("gallery:open", pause);
     document.addEventListener("gallery:close", resume);
 
-    const reveal = (target: Element, from: gsap.TweenVars, to: gsap.TweenVars) => {
-      gsap.fromTo(target, from, {
-        ...to,
-        duration: 0.65,
-        ease: "none",
-        scrollTrigger: { trigger: target, start: "top 92%", end: "top 60%", scrub: 0.45 },
-      });
-    };
-
-    document.querySelectorAll('[data-reveal="heading"]').forEach((heading) => {
-      const title = heading.querySelector("h2");
-      const supporting = heading.querySelector("p");
-      if (title) reveal(title, { clipPath: "inset(0 0 100% 0)", y: 20 }, { clipPath: "inset(0)", y: 0 });
-      if (supporting) reveal(supporting, { opacity: 0.35, y: 12 }, { opacity: 1, y: 0 });
-      reveal(heading, { "--line-scale": 0 }, { "--line-scale": 1 });
-    });
-    document.querySelectorAll('[data-reveal="image"]').forEach((image) => {
-      const isStructuralMask = image.matches(".project--slot-3 .project__media");
-      reveal(image, {
-        clipPath: isStructuralMask ? "polygon(0 0, 100% 0, 100% 100%, 0 82%)" : "inset(0 0 12% 0)",
-        y: 28,
-      }, {
-        clipPath: isStructuralMask ? "polygon(0 0, 100% 0, 100% 100%, 0 100%)" : "inset(0)",
-        y: 0,
-      });
-    });
-    document.querySelectorAll<HTMLElement>('[data-reveal="divider"]').forEach((divider) => {
-      gsap.set(divider, { "--divider-scale": 0 });
-      reveal(divider, { "--divider-scale": 0 }, { "--divider-scale": 1 });
-    });
-    const list = document.querySelector(".capabilities__list");
-    if (list) reveal(list, { x: -18, opacity: 0.35 }, { x: 0, opacity: 1 });
-
     const contactPattern = document.querySelector<HTMLElement>('[data-surface-pattern="diagonal"] .surface-pattern__field');
     let patternTrigger: ScrollTrigger | undefined;
     let patternMotion: gsap.core.Tween | undefined;
@@ -114,9 +108,9 @@
       syncPatternMotion();
     }
 
-    gsap.to(".hero__image", { yPercent: 4, scale: 1.025, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.65 } });
+    gsap.to(".hero__image", { yPercent: 1.5, scale: 1.01, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 0.65 } });
     document.querySelectorAll(".project--slot-3 .project__media img, .project--slot-5 .project__media img")
-      .forEach((image) => gsap.to(image, { yPercent: -3, scale: 1.025, ease: "none", scrollTrigger: { trigger: image.closest(".project"), start: "top bottom", end: "bottom top", scrub: 0.75 } }));
+      .forEach((image) => gsap.to(image, { yPercent: -1, scale: 1.01, ease: "none", scrollTrigger: { trigger: image.closest(".project"), start: "top bottom", end: "bottom top", scrub: 0.75 } }));
 
     const openingPattern = document.querySelector<HTMLElement>('[data-surface-pattern="grid"] .surface-pattern__field');
     const focusPattern = document.querySelector<HTMLElement>('[data-surface-pattern="grid"] .surface-pattern__field--focus');

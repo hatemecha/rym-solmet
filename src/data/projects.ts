@@ -303,3 +303,9 @@ export const heroImage: ProjectImage = {
   alt: "Interior de un galpón durante el montaje de la estructura metálica del techo",
   focalPoint: "50% 35%",
 };
+
+// A curated sequence of real work with enough context for the wide hero frame.
+export const heroProjects = [
+  "galpon-estructura-metalica", "pergola-frente-comercial", "porton-madera-metal",
+  "baranda-terraza", "frente-rejas-vivienda", "mesa-galvanizada",
+].map((slug) => projects.find((project) => project.slug === slug)!);

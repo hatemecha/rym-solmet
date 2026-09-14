@@ -1,26 +1,99 @@
 ---
 import { Picture } from "astro:assets";
-
-import { heroImage, projects } from "../data/projects";
+import { heroProjects } from "../data/projects";
 import PhotoLink from "./PhotoLink.astro";
-const project = projects.find((project) => project.images.some((image) => image.src === heroImage.src))!;
-const index = project.images.findIndex((image) => image.src === heroImage.src);
 ---
-
-<div class="hero__image">
-  <PhotoLink project={project} index={index}>
-  <Picture
-    src={heroImage.src}
-    formats={["avif", "webp"]}
-    fallbackFormat="jpeg"
-    widths={[480, 800, 1200, 1600]}
-    sizes="(min-width: 1100px) 66vw, 100vw"
-    alt={heroImage.alt}
-    loading="eager"
-    decoding="sync"
-    fetchpriority="high"
-    quality={86}
-    style={`object-position: ${heroImage.focalPoint ?? "50% 40%"}`}
-  />
-  </PhotoLink>
+<div class="hero__image" data-hero-slideshow aria-roledescription="carrusel" aria-label="Trabajos de RYM Solmet">
+  {heroProjects.map((project, index) => (
+    <div class:list={["hero-slide", { "is-active": index === 0 }]} hidden={index !== 0} inert={index !== 0} data-hero-slide aria-label={`${index + 1} de ${heroProjects.length}: ${project.title}`}>
+      <PhotoLink project={project}>
+        <Picture src={project.images[0].src} formats={["avif", "webp"]} fallbackFormat="jpeg"
+          widths={[480, 800, 1200, 1600]} sizes="(min-width: 1440px) 780px, (min-width: 1100px) 56vw, 100vw"
+          alt={project.images[0].alt} loading={index === 0 ? "eager" : "lazy"} decoding="async"
+          fetchpriority={index === 0 ? "high" : "low"} quality={82}
+          style={`object-position: ${project.images[0].focalPoint ?? "50% 50%"}`} />
+      </PhotoLink>
+    </div>
+  ))}
+  <div class="hero-player" data-hero-controls hidden>
+    <span data-hero-count aria-hidden="true">01 / {String(heroProjects.length).padStart(2, "0")}</span>
+    <button type="button" data-hero-prev aria-label="Foto anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6" /></svg></button>
+    <button type="button" data-hero-pause aria-label="Pausar presentación"><svg viewBox="0 0 24 24" aria-hidden="true"><path data-pause-icon d="M9 6v12M15 6v12" /></svg></button>
+    <button type="button" data-hero-next aria-label="Foto siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6" /></svg></button>
+  </div>
 </div>
+<script>
+  const root = document.querySelector<HTMLElement>("[data-hero-slideshow]");
+  if (root) {
+    const slides = [...root.querySelectorAll<HTMLElement>("[data-hero-slide]")];
+    const controls = root.querySelector<HTMLElement>("[data-hero-controls]")!;
+    const pause = root.querySelector<HTMLButtonElement>("[data-hero-pause]")!;
+    const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+    let current = 0, timer: ReturnType<typeof setTimeout> | undefined;
+    let paused = reduced.matches, visible = false, busy = false, focused = false, gallery = false;
+    controls.hidden = false;
+    const syncButton = () => {
+      pause.setAttribute("aria-label", paused ? "Reanudar presentación" : "Pausar presentación");
+      root.querySelector("[data-pause-icon]")!.setAttribute("d", paused ? "m9 6 9 6-9 6Z" : "M9 6v12M15 6v12");
+    };
+    const schedule = () => {
+      clearTimeout(timer);
+      if (!paused && visible && !focused && !gallery && !document.hidden && !busy)
+        timer = setTimeout(() => { void show(current + 1); }, 6500);
+    };
+    const show = async (index: number) => {
+      if (busy) return;
+      busy = true;
+      clearTimeout(timer);
+      const next = (index + slides.length) % slides.length;
+      const incoming = slides[next], outgoing = slides[current];
+      const img = incoming.querySelector("img")!;
+      img.loading = "eager";
+      incoming.hidden = false;
+      try {
+        await img.decode();
+        incoming.getBoundingClientRect();
+        incoming.classList.add("is-active");
+        outgoing.classList.remove("is-active");
+        outgoing.inert = true;
+        incoming.inert = false;
+        current = next;
+        root.querySelector("[data-hero-count]")!.textContent = `${String(current + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+        await new Promise(resolve => setTimeout(resolve, reduced.matches ? 0 : 900));
+        outgoing.hidden = true;
+      } catch { incoming.hidden = true; }
+      busy = false;
+      schedule();
+    };
+    pause.addEventListener("click", () => {
+      paused = !paused;
+      if (!paused) focused = false;
+      syncButton();
+      schedule();
+    });
+    for (const [selector, step] of [["[data-hero-prev]", -1], ["[data-hero-next]", 1]] as const) {
+      root.querySelector(selector)!.addEventListener("click", () => { paused = true; syncButton(); void show(current + step); });
+    }
+    root.addEventListener("focusin", () => { focused = true; schedule(); });
+    root.addEventListener("focusout", () => { focused = false; schedule(); });
+    document.addEventListener("visibilitychange", schedule);
+    document.addEventListener("gallery:open", () => { gallery = true; schedule(); });
+    document.addEventListener("gallery:close", () => { gallery = false; schedule(); });
+    reduced.addEventListener("change", () => { if (reduced.matches) paused = true; syncButton(); schedule(); });
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; schedule(); }, { threshold: 0.2 }).observe(root);
+    syncButton();
+  }
+</script>
+<style>
+  .hero-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 900ms ease; }
+  .hero-slide.is-active { opacity: 1; z-index: 1; }
+  .hero-slide[hidden], .hero-player[hidden] { display: none; }
+  .hero-slide :global(a), .hero-slide :global(picture) { height: 100%; }
+  .hero-slide :global(.photo-link) { animation: none; }
+  .hero-player { position: absolute; z-index: 3; bottom: 0.75rem; right: 0.75rem; display: flex; align-items: center; background: var(--color-ink); color: var(--color-canvas); }
+  .hero-player span { padding-inline: 0.9rem; font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+  .hero-player button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: inherit; }
+  .hero-player button:hover { background: #ffffff18; }
+  .hero-player button:focus-visible { outline-offset: -4px; }
+  @media (prefers-reduced-motion: reduce) { .hero-slide { transition: none; } }
+</style>

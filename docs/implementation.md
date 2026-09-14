@@ -54,8 +54,23 @@ Fuentes: subconjunto `latin` + `latin-ext` en `src/styles/archivo-latin.css` y
 
 ## Header
 
-- Transición de superficie: 180ms, sin blur.
-- Mobile: entrada centrada; al salir del hero, logo izquierda y Consultar derecha.
+- Transición de superficie: 750ms, opacidad de superficie 90% y backdrop blur de
+  10px; fondo opaco como fallback. Texto, logo y CTA cambian en 750ms.
+- Mobile: altura constante de 68px; logo centrado que se desplaza a la izquierda
+  en 850ms al salir del hero, usando únicamente transform. Consultar aparece sin cambiar la altura.
+- Footer: centrado vertical en móvil; tres columnas simétricas en tablet y
+  escritorio. Sin padding residual inferior; scrollbar y lienzo raíz en tinta.
+
+## Secuencia del hero
+
+Selección curada en `heroProjects` de `src/data/projects.ts`, sin duplicar títulos
+ni textos alternativos. Seis fotografías reales; avance cada 6,5 segundos y
+fundido de 900ms. Solo la primera imagen carga con prioridad alta; las siguientes
+se solicitan al avanzar y se decodifican antes del fundido. Controles de 44px para
+anterior, siguiente y pausa. Pausa fuera de pantalla, pestaña oculta, galería
+abierta o foco de teclado. Avanzar manualmente deja la secuencia en pausa.
+Movimiento reducido inicia la secuencia estática. Sin JS se muestra la primera
+foto y su enlace sigue funcionando. La ampliación corresponde a la foto activa.
 
 ## GrainField
 
@@ -114,22 +129,15 @@ Su CSS se incluye en el stylesheet principal para evitar un chunk dinámico
 inexistente. Al cambiar a movimiento reducido o salir del breakpoint de
 escritorio, se revierten las animaciones y se destruye Lenis.
 
-GSAP / ScrollTrigger:
+Entradas con IntersectionObserver y Web Animations en móvil y escritorio:
 
-- Máscaras breves en titulares e imágenes.
-- La máscara de la estructura de galpón usa una única apertura diagonal en escritorio;
-  el resto de las fotos conserva el reveal recto. En móvil todas usan transform corto.
-- Captions negros y opacos, sin animación.
-- Construcción de líneas y parallax muy leve en pocas fotografías estructurales.
-- En escritorio, el título de capacidades permanece sticky dentro de su propio
-  capítulo; no hay pinning en móvil ni scrollytelling continuo.
-- Nunca impedir navegación ni forzar inercia en touch.
-- Respetar `prefers-reduced-motion`.
-
-`gsap.matchMedia`:
-
-- Desktop: máscaras, parallax selectivo, Lenis.
-- Mobile: reveals cortos por transform, sin parallax continuo.
+- Una sola vez por elemento, 700ms, desplazamiento vertical de 10px y opacidad
+  inicial de 82%. Sin máscaras, pinning ni revelado condicionado a seguir bajando.
+- No ocultan contenido antes de cargar JavaScript. Captions permanecen estáticos.
+- Movimiento reducido omite y cancela las entradas activas.
+- GSAP conserva solo parallax mínimo en escritorio: hero 1,5%, fotos elegidas 1%.
+- El header conserva su estado alrededor de los límites para evitar oscilaciones
+  por scroll pequeño: margen de 16px para superficie y 32px al volver al hero.
 
 Malla animada de contacto (solo desktop, puntero fino):
 
