@@ -8,6 +8,11 @@ No quedan defectos de código conocidos que bloqueen publicación. La implementa
 
 Salud técnica posterior a las correcciones: **20/20 — Excelente**.
 
+Endurecimiento de seguridad (2026-09-13): dependencias fijadas, Dependabot, workflow
+`CI`, comprobación `npm run security:check`, CSP/referrer en el layout, y
+`/.well-known/security.txt`. Cabeceras HTTP completas siguen siendo opcionales vía
+proxy (ver `docs/deploy.md`).
+
 | Dimensión | Puntaje | Estado |
 | --- | ---: | --- |
 | Accesibilidad | 4/4 | Sin desbordes, objetivos interactivos de al menos 44 px, foco visible, orden semántico y movimiento reducido funcional. |
@@ -36,6 +41,7 @@ Salud técnica posterior a las correcciones: **20/20 — Excelente**.
 ## Verificación ya completada
 
 - `npm run check`: sin errores, warnings ni hints.
+- `npm run security:check`: versiones fijadas y escape JSON en scripts inline verificados.
 - `npm run build`: build estático correcto.
 - Detector final de Impeccable para layout: sin hallazgos.
 - Playwright headless: 320, 768, 1024 y 1440 px, sin overflow horizontal, imágenes rotas ni errores de consola.

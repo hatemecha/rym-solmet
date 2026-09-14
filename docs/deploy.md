@@ -34,6 +34,30 @@ en Settings → Pages: el archivo por sí solo no activa el dominio.
 
 Fuente: [GitHub Pages: dominio personalizado](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).
 
+## Cabeceras HTTP adicionales (opcional)
+
+GitHub Pages no permite configurar CSP, HSTS ni `X-Frame-Options` en el origen.
+El layout ya incluye CSP, referrer y Permissions-Policy vía `<meta>` (mitigación
+parcial; `frame-ancestors` solo funciona como cabecera HTTP).
+
+Si el dominio pasa por Cloudflare (u otro proxy), conviene añadir reglas de
+respuesta con:
+
+| Cabecera | Valor sugerido |
+| --- | --- |
+| Strict-Transport-Security | `max-age=31536000; includeSubDomains; preload` |
+| X-Content-Type-Options | `nosniff` |
+| X-Frame-Options | `DENY` |
+| Referrer-Policy | `strict-origin-when-cross-origin` |
+| Permissions-Policy | `camera=(), microphone=(), geolocation=()` |
+
+Mantener la CSP del HTML alineada con scripts y estilos propios en `_astro/`.
+Tras cambiar cabeceras, probar galería, scroll suave en escritorio y WhatsApp.
+
+El repositorio incluye `public/.well-known/security.txt` y el workflow `CI`
+ejecuta `npm run security:check`, `npm audit` y el build en cada push/PR.
+Dependabot revisa npm y GitHub Actions semanalmente.
+
 ## Encontrar el negocio en Google
 
 - Crear una propiedad de dominio `rymsolmet.xyz` en Google Search Console y
