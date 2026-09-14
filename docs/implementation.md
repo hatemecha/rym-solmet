@@ -84,6 +84,11 @@ desplazamiento ni dependencias.
 Cubre ancho y alto completos de secciones exteriores, incluso más allá de 1440px.
 El tile empalma bordes y conserva proporción:
 
+Período vectorial: 768px, con 32 celdas de 24px y muestreo cada 8px.
+Ambos pasos dividen el período para evitar saltos entre repeticiones.
+Sobrecobertura del generador: 240px; la capa CSS usa 12px sin escalado.
+El efecto local del cursor usa una máscara elíptica válida, sin bordes duros.
+
 | Sección | Tile | Opacidad | Notas |
 |---------|------|----------|-------|
 | Apertura | 900px | 13% | atenuado hacia columna de lectura |
@@ -105,6 +110,9 @@ Atribución PatternCraft anterior: `THIRD_PARTY_NOTICES.md`.
 ## Motion
 
 Scroll con Lenis solo en puntero fino; touch conserva scroll nativo.
+Su CSS se incluye en el stylesheet principal para evitar un chunk dinámico
+inexistente. Al cambiar a movimiento reducido o salir del breakpoint de
+escritorio, se revierten las animaciones y se destruye Lenis.
 
 GSAP / ScrollTrigger:
 

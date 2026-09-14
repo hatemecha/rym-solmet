@@ -30,12 +30,11 @@ const { variant } = Astro.props;
     opacity: 0;
     z-index: 1;
     background-position: center 35%;
-    -webkit-mask-image: radial-gradient(circle var(--focus-r, 26%) at var(--focus-x, 50%) var(--focus-y, 50%), #000, transparent 72%);
-    mask-image: radial-gradient(circle var(--focus-r, 26%) at var(--focus-x, 50%) var(--focus-y, 50%), #000, transparent 72%);
-    will-change: transform, opacity;
+    -webkit-mask-image: radial-gradient(ellipse var(--focus-r, 26%) var(--focus-r, 26%) at var(--focus-x, 50%) var(--focus-y, 50%), #000, transparent 72%);
+    mask-image: radial-gradient(ellipse var(--focus-r, 26%) var(--focus-r, 26%) at var(--focus-x, 50%) var(--focus-y, 50%), #000, transparent 72%);
   }
   .surface-pattern--grid {
-    mask-image: radial-gradient(ellipse at 12% 55%, #0003, #0008 45%, #000 85%);
+    mask-image: radial-gradient(ellipse 120% 95% at 12% 55%, #0002, #0006 40%, #000 78%);
   }
   .surface-pattern--grid .surface-pattern__field {
     background-position: center 35%;
@@ -43,14 +42,14 @@ const { variant } = Astro.props;
   .surface-pattern--dots {
     filter: invert(1);
     opacity: 0.16;
-    mask-image: linear-gradient(#0004, #000 420px);
+    mask-image: linear-gradient(#0000 0%, #0006 120px, #000 280px);
   }
   .surface-pattern--dots .surface-pattern__field {
     background-position: 38% -180px;
     background-size: 1050px 1050px;
   }
   .surface-pattern--diagonal {
-    mask-image: linear-gradient(#000, #0005 32%, #0005 75%, #000);
+    mask-image: linear-gradient(#000 0%, #0008 18%, #0008 82%, #000 100%);
   }
   .surface-pattern--diagonal .surface-pattern__field {
     background-position: 68% 80%;

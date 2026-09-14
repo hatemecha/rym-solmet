@@ -24,8 +24,8 @@ jobs:
       - name: Install, build, and upload site
         uses: withastro/action@v6
         env:
-          SITE_URL: https://${{ github.repository_owner }}.github.io
-          BASE_PATH: /${{ github.event.repository.name }}
+          SITE_URL: https://rymsolmet.xyz
+          BASE_PATH: /
 
   deploy:
     needs: build

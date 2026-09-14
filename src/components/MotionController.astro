@@ -36,10 +36,12 @@
       import("gsap"),
       import("gsap/ScrollTrigger"),
       import("lenis"),
-      import("lenis/dist/lenis.css"),
     ]);
 
     gsap.registerPlugin(ScrollTrigger);
+    const Pane = import.meta.env.DEV ? (await import("tweakpane")).Pane : undefined;
+    const media = gsap.matchMedia();
+    media.add("(min-width: 768px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)", () => {
     const anchorOffset = () => parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop)
       - header.getBoundingClientRect().height - 8;
     const lenis = new Lenis({
@@ -97,6 +99,8 @@
     const contactPattern = document.querySelector<HTMLElement>('[data-surface-pattern="diagonal"] .surface-pattern__field');
     let patternTrigger: ScrollTrigger | undefined;
     let patternMotion: gsap.core.Tween | undefined;
+    let removePatternListener = () => {};
+    let removePointerListeners = () => {};
     if (contactPattern) {
       patternMotion = gsap.to(contactPattern, { x: 8, y: -6, duration: 13, ease: "sine.inOut", repeat: -1, yoyo: true, paused: true });
       const syncPatternMotion = () => {
@@ -106,6 +110,7 @@
       };
       patternTrigger = ScrollTrigger.create({ trigger: ".closing-chapter", start: "top bottom", end: "bottom top", onToggle: syncPatternMotion });
       document.addEventListener("visibilitychange", syncPatternMotion);
+      removePatternListener = () => document.removeEventListener("visibilitychange", syncPatternMotion);
       syncPatternMotion();
     }
 
@@ -118,8 +123,7 @@
     const hero = document.querySelector<HTMLElement>(".hero");
     if (openingPattern && focusPattern && hero) {
       const gridMotion = { focusOffset: 8, radius: 26, focusOpacity: 0.85 };
-      if (import.meta.env.DEV) {
-        const { Pane } = await import("tweakpane");
+      if (Pane) {
         const pane = new Pane({ title: "Tensión local del hero" }) as unknown as {
           addBinding: (target: object, key: string, options: object) => void;
         };
@@ -152,7 +156,21 @@
       applyFocus(50, 50);
       hero.addEventListener("pointermove", moveGrid);
       hero.addEventListener("pointerleave", leaveGrid);
+      removePointerListeners = () => {
+        hero.removeEventListener("pointermove", moveGrid);
+        hero.removeEventListener("pointerleave", leaveGrid);
+      };
     }
     document.fonts.ready.then(() => ScrollTrigger.refresh());
+    return () => {
+      gsap.ticker.remove(tick);
+      resize.disconnect();
+      removePatternListener();
+      removePointerListeners();
+      document.removeEventListener("gallery:open", pause);
+      document.removeEventListener("gallery:close", resume);
+      lenis.destroy();
+    };
+    });
   }
 </script>

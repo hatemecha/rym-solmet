@@ -22,7 +22,7 @@ npm ci
 npm run dev
 ```
 
-La aplicación queda disponible en `http://localhost:4321/rym-solmet/`.
+La aplicación queda disponible en `http://localhost:4321/`.
 
 Si el dev server falla al cargar estilos o fuentes, detenelo con `Ctrl+C`
 en su terminal y volvé a iniciarlo:
@@ -81,7 +81,7 @@ npm run build
 npm run preview -- --port 4322
 ```
 
-La vista de producción estará en `http://localhost:4322/rym-solmet/` si el puerto
+La vista de producción estará en `http://localhost:4322/` si el puerto
 está libre; consultá la URL indicada en la terminal. Preview requiere reconstruir
 el sitio después de editar. Las capturas y logs locales de `.artifacts/` no se
 versionan; se pueden regenerar siguiendo el registro de verificación.
@@ -118,13 +118,10 @@ El workflow `.github/workflows/deploy.yml` publica la rama `main` en GitHub Page
 1. En el repositorio, abre **Settings → Pages**.
 2. En **Build and deployment**, elige **GitHub Actions** como origen.
 
-El workflow calcula automáticamente la URL y el subdirectorio desde el repositorio. Cuando se conecte un dominio propio, cambia `SITE_URL` al dominio y deja `BASE_PATH` vacío; luego configura el DNS en Porkbun y el dominio personalizado en GitHub Pages.
-
-Canonical, Open Graph, Twitter, JSON-LD y sitemap usan `SITE_URL` y `BASE_PATH`.
-El valor por defecto apunta a GitHub Pages (`https://hatemecha.github.io/rym-solmet/`).
-Para el dominio final, configurar `SITE_URL` al dominio confirmado y `BASE_PATH=/`
-en el workflow; no hay dominio propio supuesto en los datos del negocio.
-La portada social se genera a partir de la fotografía real del hero.
+La configuración local y el workflow apuntan a https://rymsolmet.xyz/ con BASE_PATH=/.
+Canonical, Open Graph, Twitter, JSON-LD y sitemap usan el dominio final.
+La guía de activación DNS, HTTPS, Google y recuperación está en [docs/deploy.md](docs/deploy.md).
+La portada social usa una fotografía real del hero.
 
 Las fotografías enlazan a un JPEG optimizado incluso sin JavaScript. PhotoSwipe y
 sus estilos se cargan al abrir la primera foto; las galerías, captions y variantes

@@ -9,14 +9,13 @@ import deck01 from "../assets/projects/deck-panel-madera/01.jpeg";
 import divisor01 from "../assets/projects/divisor-madera-metal/01.jpeg";
 import fachada01 from "../assets/projects/fachada-porton-metalico/01.jpeg";
 import frenteParrilla01 from "../assets/projects/frente-parrilla-metalico/01.jpeg";
-import frenteParrilla02 from "../assets/projects/frente-parrilla-metalico/02.jpeg";
+import frenteRejas01 from "../assets/projects/frente-rejas-vivienda/01.jpeg";
 import galpon01 from "../assets/projects/galpon-estructura-metalica/01.jpeg";
 import galpon02 from "../assets/projects/galpon-estructura-metalica/02.jpeg";
 import invernadero01 from "../assets/projects/invernadero-metalico/01.jpeg";
 import invernadero02 from "../assets/projects/invernadero-metalico/02.jpeg";
 import mesa01 from "../assets/projects/mesa-galvanizada/01.jpeg";
 import pergola01 from "../assets/projects/pergola-frente-comercial/01.jpeg";
-import pergola02 from "../assets/projects/pergola-frente-comercial/02.jpeg";
 import portonMadera01 from "../assets/projects/porton-madera-metal/01.jpeg";
 import portonMetal01 from "../assets/projects/porton-metalico-corredizo/01.jpeg";
 import puerta01 from "../assets/projects/puerta-corrediza-hierro-vidrio/01.jpeg";
@@ -99,32 +98,24 @@ export const projects: Project[] = [
     layout: "portrait",
     images: [
       {
-        src: frenteParrilla02,
+        src: frenteParrilla01,
         alt: "Frente de parrilla negro con puertas metálicas y mesada de acero",
         focalPoint: "52% 50%",
-      },
-      {
-        src: frenteParrilla01,
-        alt: "Detalle de puerta metálica negra en un frente de parrilla",
       },
     ],
   },
   {
     slug: "pergola-frente-comercial",
     title: "Pérgola exterior",
-    materials: "Metal, vidrio y madera",
+    materials: "Metal y madera",
     section: "featured",
     order: 5,
     layout: "landscape",
     images: [
       {
         src: pergola01,
-        alt: "Pérgola metálica con listones de madera instalada sobre un frente comercial",
-        focalPoint: "50% 54%",
-      },
-      {
-        src: pergola02,
-        alt: "Vista completa de un frente comercial con cerramiento de vidrio y pérgola",
+        alt: "Pérgola de estructura metálica con listones de madera sobre un frente con portón de malla",
+        focalPoint: "50% 42%",
       },
     ],
   },
@@ -153,8 +144,8 @@ export const projects: Project[] = [
     images: [
       {
         src: invernadero01,
-        alt: "Invernadero compacto con perfilería metálica y cerramiento traslúcido",
-        focalPoint: "50% 48%",
+        alt: "Invernadero de perfilería metálica verde con placas traslúcidas y puerta corrediza abierta",
+        focalPoint: "50% 46%",
       },
       {
         src: invernadero02,
@@ -165,19 +156,20 @@ export const projects: Project[] = [
   {
     slug: "baranda-terraza",
     title: "Baranda exterior",
-    materials: "Perfilería metálica y vidrio",
+    materials: "Perfilería metálica",
     section: "featured",
     order: 8,
     layout: "landscape",
     images: [
       {
         src: baranda02,
-        alt: "Baranda negra con paños de vidrio instalada en una terraza",
-        focalPoint: "50% 48%",
+        alt: "Terraza con césped artificial y baranda metálica negra sobre la calle",
+        focalPoint: "50% 28%",
       },
       {
         src: baranda01,
-        alt: "Detalle vertical de escalera metálica y baranda sobre una terraza",
+        alt: "Escalera metálica fija y baranda negra en una terraza con césped artificial",
+        focalPoint: "42% 40%",
       },
     ],
   },
@@ -191,7 +183,8 @@ export const projects: Project[] = [
     images: [
       {
         src: ahumador01,
-        alt: "Ahumador cilíndrico de metal negro con estante inferior de madera",
+        alt: "Ahumador cilíndrico de metal negro con chimenea, ruedas y estante inferior de madera",
+        focalPoint: "50% 48%",
       },
     ],
   },
@@ -252,16 +245,32 @@ export const projects: Project[] = [
     ],
   },
   {
+    slug: "frente-rejas-vivienda",
+    title: "Rejas de frente",
+    materials: "Perfilería metálica",
+    section: "featured",
+    order: 9,
+    layout: "landscape",
+    images: [
+      {
+        src: frenteRejas01,
+        alt: "Rejas negras de barrotes verticales en el frente de una vivienda",
+        focalPoint: "50% 55%",
+      },
+    ],
+  },
+  {
     slug: "deck-panel-madera",
-    title: "Deck y panel exterior",
-    materials: "Madera y estructura metálica",
-    section: "archive",
-    order: 3,
+    title: "Panel exterior",
+    materials: "Madera, metal y césped artificial",
+    section: "featured",
+    order: 10,
     layout: "portrait",
     images: [
       {
         src: deck01,
-        alt: "Deck de madera con panel vertical y sector verde en un patio",
+        alt: "Panel vertical de listones de madera con tramo central de césped artificial sobre bases metálicas",
+        focalPoint: "50% 48%",
       },
     ],
   },
@@ -270,7 +279,7 @@ export const projects: Project[] = [
     title: "Cubierta de chapa",
     materials: "Estructura y chapa acanalada",
     section: "archive",
-    order: 4,
+    order: 3,
     layout: "landscape",
     images: [
       {

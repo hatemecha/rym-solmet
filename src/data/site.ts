@@ -2,7 +2,7 @@ export const site = {
   name: "RYM Solmet",
   title: "RYM Solmet | Herrería y fabricación a medida en Bahía Blanca",
   description:
-    "Trabajos de herrería, estructuras metálicas y fabricación a medida en Bahía Blanca y la zona.",
+    "Herrería a medida en Bahía Blanca y alrededores. Portones, estructuras metálicas, frentes de parrilla y trabajos en metal y madera. Consultá por WhatsApp.",
   location: "Bahía Blanca y la zona",
   contactName: "Abraham Romero",
   phoneDisplay: "+54 9 291 503-9909",

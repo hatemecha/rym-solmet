@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Astro estático con TypeScript, CSS propio, npm y Node.js 24. El sitio se publica inicialmente en GitHub Pages y queda preparado para usar más adelante un dominio comprado en Porkbun.
+Astro estático con TypeScript, CSS propio, npm y Node.js 24. El sitio se publica en GitHub Pages con el dominio confirmado rymsolmet.xyz. La activación de DNS y HTTPS se detalla en docs/deploy.md.
 
 ## Users
 
@@ -44,7 +44,7 @@ La evaluación comienza mirando fotografías de portones, cerramientos, estructu
 
 ## Evidence on Hand
 
-Hay 21 fotografías reales organizadas en `src/assets/projects/`, el logo original provisto por el emprendimiento en `src/assets/brand/logosolmet.png` y su derivado limpio para interfaz en `src/assets/brand/logosolmet-clean.png`. No se dispone de Instagram, testimonios, textos históricos ni datos verificables sobre antigüedad.
+Hay 20 fotografías reales organizadas en `src/assets/projects/`, el logo original provisto por el emprendimiento en `src/assets/brand/logosolmet.png` y su derivado limpio para interfaz en `src/assets/brand/logosolmet-clean.png`. No se dispone de Instagram, testimonios, textos históricos ni datos verificables sobre antigüedad.
 
 ## Product Principles
 

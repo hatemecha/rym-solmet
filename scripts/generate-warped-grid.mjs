@@ -3,6 +3,9 @@ import { mkdirSync, writeFileSync } from "node:fs";
 // Periodic shears preserve continuous cells and matching tile edges.
 // Overscan covers every edge even at the strongest displacement.
 const size = 768;
+// Both the grid spacing and sampling step must divide the tile period.
+const spacing = size / 32;
+const overscan = 240;
 const tau = Math.PI * 2 / size;
 function warp(u, v) {
   const x = u + 110 * Math.sin(v * tau) + 35 * Math.sin(v * tau * 2);
@@ -11,9 +14,9 @@ function warp(u, v) {
 }
 const paths = [];
 for (const vertical of [false, true]) {
-  for (let line = -200; line <= size + 200; line += 26) {
+  for (let line = -overscan; line <= size + overscan; line += spacing) {
     const points = [];
-    for (let t = -200; t <= size + 200; t += 8) {
+    for (let t = -overscan; t <= size + overscan; t += 8) {
       const [x, y] = warp(vertical ? line : t, vertical ? t : line);
       points.push(`${points.length ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`);
     }

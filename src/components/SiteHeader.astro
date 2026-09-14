@@ -2,17 +2,26 @@
 import ArrowIcon from "./ArrowIcon.astro";
 import BrandLogo from "./BrandLogo.astro";
 import { site } from "../data/site";
+
+interface Props {
+  /** When set (e.g. on 404), section links point at the home page. */
+  homePath?: string;
+}
+
+const { homePath } = Astro.props;
+const homeHref = homePath ?? "#inicio";
+const sectionHref = (id: string) => (homePath ? `${homePath}#${id}` : `#${id}`);
 ---
 
 <header class="site-header" data-site-header data-surface="ink">
   <div class="site-header__inner page-shell">
-    <a class="wordmark" href="#inicio" aria-label="RYM Solmet, volver al inicio">
+    <a class="wordmark" href={homeHref} aria-label="RYM Solmet, volver al inicio">
       <BrandLogo priority />
     </a>
     <nav class="site-nav" aria-label="Navegación principal">
       <div class="site-nav__links">
-        <a href="#trabajos">Trabajos</a>
-        <a href="#servicios">Qué hacemos</a>
+        <a href={sectionHref("trabajos")}>Trabajos</a>
+        <a href={sectionHref("servicios")}>Qué hacemos</a>
       </div>
       <a class="site-nav__contact" href={site.whatsapp} aria-label="Consultar por WhatsApp">
         <span>Consultar</span>
